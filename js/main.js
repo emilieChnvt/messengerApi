@@ -41,9 +41,9 @@ async function logMessage() {
             console.log(data)
         })
 }
+async function initMessaagerie(){
+    await getToken();
+    await logMessage();
+}
 
-(async () => {
-    await getToken(); // Récupérer d'abord le token
-    await logMessage(); // Puis récupérer les messages
-})();
-
+initMessaagerie()
