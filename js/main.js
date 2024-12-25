@@ -8,10 +8,19 @@ const discussionsPrivePage = document.querySelector(".discussionsPrivePage");
 
 
 let token = null;
+const toSignUp = document.querySelector(".toSignUp");
+const createAccount = document.querySelector(".createAccount");
+toSignUp.addEventListener("click", () => {
+    login.classList.add("hidden");
+    login.classList.remove("visible");
 
+    createAccount.classList.add("visible");
+    createAccount.classList.remove("hidden");
+
+})
 
 function displayLoginForm(){
-    login.style.display = "flex";
+
     const username = document.querySelector(".username");
     const password = document.querySelector(".password");
     const submit = document.querySelector(".submit");

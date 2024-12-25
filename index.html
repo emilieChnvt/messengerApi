@@ -12,7 +12,7 @@
 <div class="container d-flex align-items-center justify-content-center ">
 
 
-    <div class="login flex-column  col-8  col-sm-6 col-md-3 ">
+    <div class="login flex-column  col-8  col-sm-6 col-md-3 visible">
         <h3>Login</h3>
         <p>Please Log in to continue</p>
         <div class="inputsLogin flex-column  align-items-center justify-content-center gap-3">
@@ -21,10 +21,10 @@
             <button class="submit btn align-right border">Log in</button>
         </div>
         <div>
-            <p class="text-center">Don't have an account? Sign up</p>
+            <p class="text-center">Don't have an account?<span class="toSignUp"> Sign up</span></p>
         </div>
     </div>
-    <div class="login flex-column  col-8  col-sm-6 col-md-3 visible">
+    <div class="createAccount flex-column  col-8  col-sm-6 col-md-3 hidden">
         <h3>Create an account</h3>
 
         <div class="inputsLogin flex-column  align-items-center justify-content-center">
@@ -33,7 +33,7 @@
             <button class="submit btn align-right border">Sign up</button>
         </div>
         <div>
-            <p class="text-center">Already have an account? Sign in</p>
+            <p class="text-center">Already have an account?<span class="toSignIn"> Sign in</span></p>
         </div>
     </div>
 
@@ -58,10 +58,7 @@
 
         </div>
     </div>
-    <div class="chat">
-        <input type="text" class="">
-        <button class="send">send</button>
-    </div>
+
 </div>
 <script src="js/main.js"></script>
 </body>
