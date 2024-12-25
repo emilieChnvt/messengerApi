@@ -9,6 +9,8 @@ const discussionsPrivePage = document.querySelector(".discussionsPrivePage");
 
 let token = null;
 const toSignUp = document.querySelector(".toSignUp");
+const toSignIn = document.querySelector(".toSignIn");
+const loginPage = document.querySelector(".login");
 const createAccount = document.querySelector(".createAccount");
 toSignUp.addEventListener("click", () => {
     login.classList.add("hidden");
@@ -18,6 +20,15 @@ toSignUp.addEventListener("click", () => {
     createAccount.classList.remove("hidden");
 
 })
+toSignIn.addEventListener("click", () => {
+    createAccount.classList.add("hidden");
+    createAccount.classList.remove("visible");
+
+    login.classList.add("visible");
+    login.classList.remove("hidden");
+
+})
+
 
 function displayLoginForm(){
 
