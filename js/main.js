@@ -3,8 +3,67 @@ const apiMessage = "https://b1messenger.esdlyon.dev/api/messages";
 
 const login = document.querySelector(".login");
 const chat = document.querySelector(".chat");
+const discussionsGroupePage = document.querySelector(".discussionsGroupePage");
+const discussionsPrivePage = document.querySelector(".discussionsPrivePage");
+
 
 let token = null;
+
+
+function displayLoginForm(){
+    login.style.display = "flex";
+    const username = document.querySelector(".username");
+    const password = document.querySelector(".password");
+    const submit = document.querySelector(".submit");
+    submit.addEventListener('click', ()=>{
+        getToken(username.value, password.value).then((res)=>{
+            if(res.token){
+
+                displayChat()
+            }
+        })
+    })
+}
+function displayChat() {
+    login.style.display = "none";
+    discussionsGroupePage.classList.add("visible");
+    discussionsPrivePage.classList.add("hidden");
+
+    chooseBtnConv()
+
+}
+function chooseBtnConv() {
+    const btnGroupe = document.querySelectorAll(".btnGroupe");
+    const btnPrive = document.querySelectorAll(".btnPrive");
+
+    btnGroupe.forEach((btn) => {
+        btn.addEventListener("click", ()=>{
+            discussionsGroupePage.classList.remove("hidden");
+            discussionsGroupePage.classList.add("visible");
+
+            discussionsPrivePage.classList.remove("visible");
+            discussionsPrivePage.classList.add("hidden");
+        })
+    })
+    btnPrive.forEach((btn) => {
+        btn.addEventListener("click", ()=>{
+            discussionsGroupePage.classList.remove("visible");
+            discussionsGroupePage.classList.add("hidden");
+
+            discussionsPrivePage.classList.remove("hidden");
+            discussionsPrivePage.classList.add("visible");
+        })
+    })
+}
+
+
+
+
+if(!token){
+    displayLoginForm()
+}else{
+    displayChat()
+}
 
 async function getToken(username, password) {
     let params = {
@@ -43,28 +102,3 @@ async function getMessages() {
         })
 }
 
-
-function displayLoginForm(){
-    login.style.display = "flex";
-    const username = document.querySelector(".username");
-    const password = document.querySelector(".password");
-    const submit = document.querySelector(".submit");
-    submit.addEventListener('click', ()=>{
-        getToken(username.value, password.value).then((res)=>{
-            if(res.token){
-
-                displayChat()
-            }
-        })
-    })
-}
-function displayChat(){
-    login.style.display = "none";
-    chat.style.display = "flex";
-    getMessages().then((res)=>{console.log(res)})
-}
-if(!token){
-    displayLoginForm()
-}else{
-    displayChat()
-}

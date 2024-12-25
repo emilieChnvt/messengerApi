@@ -1,6 +1,12 @@
-.login, .chat{
+.login, .chat {
     display: none;
 }
 .btnSelected{
     background-color: rgba(166, 166, 166, 0.73);
+}
+.hidden{
+    display: none;
+ }
+.visible{
+    display: flex;
 }
