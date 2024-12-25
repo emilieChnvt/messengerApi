@@ -10,3 +10,14 @@
 .visible{
     display: flex;
 }
+.align-right{
+    margin-left: auto;
+    display: block;
+}
+.inputsLogin {
+    display: flex;
+    flex-direction: column;
+    justify-content: center;
+    align-items: center;
+    gap:1rem;
+}

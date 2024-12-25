@@ -12,15 +12,33 @@
 <div class="container d-flex align-items-center justify-content-center ">
 
 
-    <div class="login  flex-column col-8  col-sm-6 col-md-3 border align-items-center justify-content-center gap-3">
+    <div class="login flex-column  col-8  col-sm-6 col-md-3 ">
+        <h3>Login</h3>
+        <p>Please Log in to continue</p>
+        <div class="inputsLogin flex-column  align-items-center justify-content-center gap-3">
+            <input type="text" class="username w-100" placeholder="username">
+            <input type="password" class="password w-100" placeholder="*******">
+            <button class="submit btn align-right border">Log in</button>
+        </div>
+        <div>
+            <p class="text-center">Don't have an account? Sign up</p>
+        </div>
+    </div>
+    <div class="login flex-column  col-8  col-sm-6 col-md-3 visible">
+        <h3>Create an account</h3>
 
-        <input type="text" class="username w-100" placeholder="username">
-        <input type="password" class="password w-100" placeholder="*******">
-        <button class="submit btn">Log in</button>
+        <div class="inputsLogin flex-column  align-items-center justify-content-center">
+            <input type="text" class="username w-100" placeholder="username">
+            <input type="password" class="password w-100" placeholder="*******">
+            <button class="submit btn align-right border">Sign up</button>
+        </div>
+        <div>
+            <p class="text-center">Already have an account? Sign in</p>
+        </div>
     </div>
 
-    <div class="discussionsGroupePage hidden">
-        <h3>Discussions</h3>
+    <div class="discussionsGroupePage flex-column hidden">
+        <h3 class="mb-3">Discussions</h3>
         <div class="flex">
             <button class="btn border px-5 py-1 btnSelected btnGroupe">groupe</button>
             <button class="btn border px-5 py-1 btnPrive">privé</button>
@@ -29,8 +47,8 @@
     <p>groupe</p>
         </div>
     </div>
-    <div class="discussionsPrivePage hidden">
-        <h3>Discussions</h3>
+    <div class="discussionsPrivePage flex-column hidden">
+        <h3 class="mb-3">Discussions</h3>
         <div class="flex">
             <button class="btn border px-5 py-1 btnGroupe">groupe</button>
             <button class="btn border px-5 py-1 btnSelected btnPrive">privé</button>
