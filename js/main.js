@@ -58,8 +58,15 @@ const displayHomeChat = ()=> {
 
 }
 const whoAmIDiv = () => {
+    const nav = document.querySelector(".nav");
     whoami().then((res)=>{
         console.log(res);
+        let profil = `<div class="align-right">
+                                 <span>${res.displayName}</span> 
+                                 <img src=${res.imageUrl} alt="imgProfile" class=" photoProfil rounded-circle" >
+                                
+                            </div>`
+        nav.innerHTML = profil;
     })
 }
 const chooseBtnConv = ()=> {

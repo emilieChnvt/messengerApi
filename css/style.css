@@ -32,7 +32,3 @@
     bottom: 10px;
 }
 
-.grp {
-    pointer-events: auto; /* S'assurer que l'élément est cliquable */
-    z-index: 10;  /* S'assurer qu'il est au-dessus des autres éléments */
-}
