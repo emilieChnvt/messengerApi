@@ -5,6 +5,8 @@ const login = document.querySelector(".login");
 const chat = document.querySelector(".chat");
 const discussionsGroupePage = document.querySelector(".discussionsGroupePage");
 const discussionsPrivePage = document.querySelector(".discussionsPrivePage");
+const grp = document.querySelector(".grp");
+
 
 
 let token = null;
@@ -85,29 +87,46 @@ const chooseBtnConv = ()=> {
 
 const displayChatConv=()=>{
 
-    const chat = document.querySelector(".chat");
-    chat.classList.add("visible");
-    chat.classList.remove("hidden");
-
-
     discussionsGroupePage.classList.add("visible");
     discussionsGroupePage.classList.remove("hidden");
 
     discussionsPrivePage.classList.add("hidden");
 
-    const grp = document.querySelector(".grp");
+    toogleBtnToShowConv()
 
-    grp.addEventListener("click", ()=>{
-        console.log("grp");
-        displayMessages()
-    })
 
 }
-const displayMessages=()=>{
+const toogleBtnToShowConv = () => {
+    grp.addEventListener("click", ()=>{
+        console.log("grp");
+        displayConv()
+    })
+}
+const displayConv=()=>{
+    discussionsGroupePage.classList.add("hidden");
+    discussionsGroupePage.classList.remove("visible");
+   displayMessages()
+}
+const displayMessages = ()=>{
+    const chat = document.querySelector(".chat");
+
+    chat.classList.add("visible");
+    chat.classList.remove("hidden");
+
     getMessages().then(res=>{
         chat.classList.remove("hidden");
         chat.classList.add("visible");
+
         console.log(res)
+        res.forEach(msg=>{
+            const allMessages = document.querySelector(".allMessages");
+            let message = `<div class="border border-1">
+                                    <span>${msg.content}</span>
+
+                                  </div>`
+            console.log(message);
+           allMessages.innerHTML += message;
+        })
     })
 }
 if(!token){
