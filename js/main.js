@@ -30,7 +30,7 @@ toSignIn.addEventListener("click", () => {
 })
 
 
-function displayLoginForm(){
+const displayLoginForm = ()=>{
 
     const username = document.querySelector(".username");
     const password = document.querySelector(".password");
@@ -44,7 +44,7 @@ function displayLoginForm(){
         })
     })
 }
-function displayChat() {
+const displayChat = ()=> {
     login.style.display = "none";
     discussionsGroupePage.classList.add("visible");
     discussionsPrivePage.classList.add("hidden");
@@ -52,7 +52,7 @@ function displayChat() {
     chooseBtnConv()
 
 }
-function chooseBtnConv() {
+const chooseBtnConv = ()=> {
     const btnGroupe = document.querySelectorAll(".btnGroupe");
     const btnPrive = document.querySelectorAll(".btnPrive");
 
