@@ -39,12 +39,12 @@ const displayLoginForm = ()=>{
         getToken(username.value, password.value).then((res)=>{
             if(res.token){
 
-                displayChat()
+                displayHomeChat()
             }
         })
     })
 }
-const displayChat = ()=> {
+const displayHomeChat = ()=> {
     login.style.display = "none";
     discussionsGroupePage.classList.add("visible");
     discussionsPrivePage.classList.add("hidden");
@@ -64,6 +64,7 @@ const chooseBtnConv = ()=> {
             discussionsPrivePage.classList.remove("visible");
             discussionsPrivePage.classList.add("hidden");
         })
+        displayChatConv()
     })
     btnPrive.forEach((btn) => {
         btn.addEventListener("click", ()=>{
@@ -76,13 +77,23 @@ const chooseBtnConv = ()=> {
     })
 }
 
+const displayChatConv=()=>{
+    const grp = document.querySelector(".grp");
+    grp.addEventListener("click", ()=>{
+        displayChat()
+    })
+}
 
 
-
+const displayChat=()=>{
+    const chat = document.querySelector(".chat");
+    chat.classList.remove("hidden");
+    chat.classList.add("visible");
+}
 if(!token){
     displayLoginForm()
 }else{
-    displayChat()
+    displayHomeChat()
 }
 
 async function getToken(username, password) {
