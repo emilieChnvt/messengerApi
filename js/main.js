@@ -50,6 +50,7 @@ const displayHomeChat = ()=> {
     discussionsPrivePage.classList.add("hidden");
 
     chooseBtnConv()
+    displayChatConv()
 
 }
 const chooseBtnConv = ()=> {
@@ -63,8 +64,9 @@ const chooseBtnConv = ()=> {
 
             discussionsPrivePage.classList.remove("visible");
             discussionsPrivePage.classList.add("hidden");
+            displayChatConv()
         })
-        displayChatConv()
+
     })
     btnPrive.forEach((btn) => {
         btn.addEventListener("click", ()=>{
@@ -77,18 +79,36 @@ const chooseBtnConv = ()=> {
     })
 }
 
+
+
+
+
 const displayChatConv=()=>{
-    const grp = document.querySelector(".grp");
-    grp.addEventListener("click", ()=>{
-        displayChat()
-    })
-}
 
-
-const displayChat=()=>{
     const chat = document.querySelector(".chat");
-    chat.classList.remove("hidden");
     chat.classList.add("visible");
+    chat.classList.remove("hidden");
+
+
+    discussionsGroupePage.classList.add("visible");
+    discussionsGroupePage.classList.remove("hidden");
+
+    discussionsPrivePage.classList.add("hidden");
+
+    const grp = document.querySelector(".grp");
+
+    grp.addEventListener("click", ()=>{
+        console.log("grp");
+        displayMessages()
+    })
+
+}
+const displayMessages=()=>{
+    getMessages().then(res=>{
+        chat.classList.remove("hidden");
+        chat.classList.add("visible");
+        console.log(res)
+    })
 }
 if(!token){
     displayLoginForm()

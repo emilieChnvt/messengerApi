@@ -43,9 +43,9 @@
             <button class="btn border px-5 py-1 btnSelected btnGroupe">groupe</button>
             <button class="btn border px-5 py-1 btnPrive">privé</button>
         </div>
-        <div class="allConv mt-5">
-            <div class="grp d-flex align-items-center justify-content-between border rounded-3 px-3 py-1">
-                <div class="d-flex align-items-center justify-content-center">
+        <div class="allConv d-flex flex-column mt-5">
+            <div class=" d-flex align-items-center justify-content-between border rounded-3 px-3 py-1">
+                <div class="grp d-flex align-items-center justify-content-center">
                     <div class="nameGroupe rounded-circle photoProfil border border-1 me-3"></div>
                     <p class="pt-3">B1 dev</p>
                 </div>
@@ -64,8 +64,11 @@
 
         </div>
     </div>
-    <div class="chat hidden">
-        <p>je suis le chat</p>
+    <div class="chat  hidden">
+        <div class="enterMessage w-100">
+            <input type="text">
+            <button>send</button>
+        </div>
     </div>
 
 </div>
