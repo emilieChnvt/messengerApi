@@ -51,9 +51,16 @@ const displayHomeChat = ()=> {
     discussionsGroupePage.classList.add("visible");
     discussionsPrivePage.classList.add("hidden");
 
+    whoAmIDiv()
+
     chooseBtnConv()
     displayChatConv()
 
+}
+const whoAmIDiv = () => {
+    whoami().then((res)=>{
+        console.log(res);
+    })
 }
 const chooseBtnConv = ()=> {
     const btnGroupe = document.querySelectorAll(".btnGroupe");
@@ -129,6 +136,7 @@ const displayMessages = ()=>{
         })
     })
 }
+
 if(!token){
     displayLoginForm()
 }else{
@@ -166,6 +174,21 @@ async function getMessages() {
 
     }
     return await fetch(apiMessage, parameters)
+        .then(res => res.json())
+        .then(data => {
+            return data
+        })
+}
+
+async function whoami(){
+    let params ={
+        method: "GET",
+        headers: {
+            "Content-Type": "application/json",
+            "Authorization": "Bearer " + token
+        }
+    }
+    return await fetch("https://b1messenger.esdlyon.dev/api/whoami", params)
         .then(res => res.json())
         .then(data => {
             return data
