@@ -153,31 +153,37 @@ const displayMessages = () => {
 
     chat.classList.add("visible");
     chat.classList.remove("hidden");
-
+setTimeout(()=>{
     getMessages().then(res => {
         chat.classList.remove("hidden");
         chat.classList.add("visible");
 
         console.log(res)
 
-
         res.forEach(msg => {
-            addMessageToChat(msg)
-
-
-
+            addMessageToChat(msg.content)
         })
     })
+
+})
+
     displayInputMessage()
 }
 const displayInputMessage = () => {
 
     const btnMessage = document.querySelector(".btnMessage");
     btnMessage.addEventListener("click", ()=>{
-        newMessage(inputMessage.value).then((res)=> {
-            console.log(res);
-            addMessageToChat()
-        })
+        const message = inputMessage.value;
+        if(message){
+            newMessage(inputMessage.value).then((res)=> {
+                console.log(res);
+                addMessageToChat({
+                    content:message,
+                    author:{ username:'emiliech'}
+                })
+            })
+        }
+
     })
 }
 const addMessageToChat = (content, username) => {
@@ -200,6 +206,9 @@ const addMessageToChat = (content, username) => {
 
     messagesDiv.appendChild(messageContent);
     allMessages.appendChild(messagesDiv);
+
+    //faire défiler pr voir new message
+    allMessages.scrollTop = allMessages.scrollHeight;
 }
 if(!token){
     displayLoginForm()
