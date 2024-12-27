@@ -6,6 +6,7 @@ const chat = document.querySelector(".chat");
 const discussionsGroupePage = document.querySelector(".discussionsGroupePage");
 const discussionsPrivePage = document.querySelector(".discussionsPrivePage");
 const grp = document.querySelector(".grp");
+const inputMessage = document.querySelector(".inputMessage");
 
 
 
@@ -96,11 +97,6 @@ const chooseBtnConv = ()=> {
         })
     })
 }
-
-
-
-
-
 const displayChatConv=()=>{
 
     discussionsGroupePage.classList.add("visible");
@@ -167,6 +163,11 @@ const displayMessages = () => {
         allMessages.innerHTML = "";
 
         res.forEach(msg => {
+            let messagesArray = []
+            messagesArray.push(msg);
+
+            console.log(messagesArray);
+
             const messagesDiv = document.createElement("div");
             messagesDiv.classList.add("d-flex", "border", "border-1", "my-2");
             messagesDiv.style.width = "100%"
@@ -186,8 +187,20 @@ const displayMessages = () => {
            allMessages.appendChild(messagesDiv);
         })
     })
+    displayInputMessage()
 }
+const displayInputMessage = () => {
 
+    const btnMessage = document.querySelector(".btnMessage");
+    btnMessage.addEventListener("click", ()=>{
+        newMessage(inputMessage.value).then((res)=> {
+            console.log(res);
+        })
+
+    })
+
+
+}
 if(!token){
     displayLoginForm()
 }else{
@@ -244,5 +257,23 @@ async function whoami(){
         .then(data => {
             return data
         })
+}
+async function newMessage(inputMessage){
+    let params ={
+        method: "POST",
+        headers: {
+            "Content-Type": "application/json",
+            "Authorization": "Bearer " + token
+        },
+       body: JSON.stringify({
+           content: inputMessage
+       })
+    }
+    return await fetch('https://b1messenger.esdlyon.dev/api/messages/new', params)
+        .then(res => res.json())
+        .then(data => {
+            return data
+        })
+
 }
 
