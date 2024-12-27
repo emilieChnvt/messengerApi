@@ -80,6 +80,7 @@ const chooseBtnConv = ()=> {
 
             discussionsPrivePage.classList.remove("visible");
             discussionsPrivePage.classList.add("hidden");
+            removeArrowToGoBack()
             displayChatConv()
         })
 
@@ -91,6 +92,7 @@ const chooseBtnConv = ()=> {
 
             discussionsPrivePage.classList.remove("hidden");
             discussionsPrivePage.classList.add("visible");
+            removeArrowToGoBack()
         })
     })
 }
@@ -105,10 +107,17 @@ const displayChatConv=()=>{
     discussionsGroupePage.classList.remove("hidden");
 
     discussionsPrivePage.classList.add("hidden");
-
+    removeArrowToGoBack()
     toogleBtnToShowConv()
 
 
+}
+const removeArrowToGoBack = ()=> {
+    const arrow = document.querySelector(".arrowToGoBack");
+    console.log(arrow);
+    if(arrow){
+        arrow.remove()
+    }
 }
 const toogleBtnToShowConv = () => {
     grp.addEventListener("click", ()=>{
@@ -125,12 +134,14 @@ const displayConv=()=>{
 const displayArrowToGoBack = () => {
     const nav = document.querySelector(".nav");
 
-    const arrow = document.createElement("span");
-    arrow.innerHTML = ""
-    arrow.innerHTML = '<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 320 512" style="width:20px; height:20px" class="arrowToGoBack"><path d="M9.4 233.4c-12.5 12.5-12.5 32.8 0 45.3l192 192c12.5 12.5 32.8 12.5 45.3 0s12.5-32.8 0-45.3L77.3 256 246.6 86.6c12.5-12.5 12.5-32.8 0-45.3s-32.8-12.5-45.3 0l-192 192z"/></svg>'
-    nav.prepend(arrow);
-    const arrowToGoBack = document.querySelector(".arrowToGoBack");
-    arrowToGoBack.addEventListener("click", goBack);
+    if(!document.querySelector(".arrowToGoBack")){
+        const arrow = document.createElement("span");
+        arrow.innerHTML = '<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 320 512" style="width:20px; height:20px" class="arrowToGoBack"><path d="M9.4 233.4c-12.5 12.5-12.5 32.8 0 45.3l192 192c12.5 12.5 32.8 12.5 45.3 0s12.5-32.8 0-45.3L77.3 256 246.6 86.6c12.5-12.5 12.5-32.8 0-45.3s-32.8-12.5-45.3 0l-192 192z"/></svg>'
+        nav.prepend(arrow);
+
+        const arrowToGoBack = document.querySelector(".arrowToGoBack");
+        arrowToGoBack.addEventListener("click", goBack);
+    }
 
 }
 const goBack = () => {
@@ -139,6 +150,7 @@ const goBack = () => {
 
     chat.classList.add("hidden");
     chat.classList.remove("visible");
+    removeArrowToGoBack()
 }
 const displayMessages = () => {
     const chat = document.querySelector(".chat");
