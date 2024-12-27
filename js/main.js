@@ -119,22 +119,40 @@ const toogleBtnToShowConv = () => {
 const displayConv=()=>{
     discussionsGroupePage.classList.add("hidden");
     discussionsGroupePage.classList.remove("visible");
+    displayArrowToGoBack()
    displayMessages()
 }
-const displayMessages = ()=>{
+const displayArrowToGoBack = () => {
+    const nav = document.querySelector(".nav");
+
+    const arrow = document.createElement("span");
+    arrow.innerHTML = '<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 320 512" style="width:20px; height:20px" class="arrowToGoBack"><path d="M9.4 233.4c-12.5 12.5-12.5 32.8 0 45.3l192 192c12.5 12.5 32.8 12.5 45.3 0s12.5-32.8 0-45.3L77.3 256 246.6 86.6c12.5-12.5 12.5-32.8 0-45.3s-32.8-12.5-45.3 0l-192 192z"/></svg>'
+    nav.prepend(arrow);
+    const arrowToGoBack = document.querySelector(".arrowToGoBack");
+    arrowToGoBack.addEventListener("click", goBack);
+
+}
+const goBack = () => {
+    discussionsGroupePage.classList.add("visible");
+    discussionsGroupePage.classList.remove("hidden");
+
+    chat.classList.add("hidden");
+    chat.classList.remove("visible");
+}
+const displayMessages = () => {
     const chat = document.querySelector(".chat");
 
     chat.classList.add("visible");
     chat.classList.remove("hidden");
 
-    getMessages().then(res=>{
+    getMessages().then(res => {
         chat.classList.remove("hidden");
         chat.classList.add("visible");
 
         console.log(res)
         const allMessages = document.querySelector(".allMessages");
 
-        res.forEach(msg=>{
+        res.forEach(msg => {
             const messagesDiv = document.createElement("div");
             messagesDiv.classList.add("d-flex", "border", "border-1", "my-2");
             messagesDiv.style.width = "100%"
