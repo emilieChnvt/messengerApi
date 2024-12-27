@@ -159,32 +159,13 @@ const displayMessages = () => {
         chat.classList.add("visible");
 
         console.log(res)
-        const allMessages = document.querySelector(".allMessages");
-        allMessages.innerHTML = "";
+
 
         res.forEach(msg => {
-            let messagesArray = []
-            messagesArray.push(msg);
+            addMessageToChat(msg)
 
-            console.log(messagesArray);
 
-            const messagesDiv = document.createElement("div");
-            messagesDiv.classList.add("d-flex", "border", "border-1", "my-2");
-            messagesDiv.style.width = "100%"
 
-            const messageContent = document.createElement("span");
-            messageContent.textContent = msg.content;
-
-           if(msg.author.username === "emiliech"){
-               messagesDiv.style.justifyContent = "flex-end"
-               messageContent.style.textAlign = "right";
-           }else{
-               messageContent.style.textAlign = "left";
-               messagesDiv.style.justifyContent = "flex-start"
-           }
-
-           messagesDiv.appendChild(messageContent);
-           allMessages.appendChild(messagesDiv);
         })
     })
     displayInputMessage()
@@ -195,11 +176,30 @@ const displayInputMessage = () => {
     btnMessage.addEventListener("click", ()=>{
         newMessage(inputMessage.value).then((res)=> {
             console.log(res);
+            addMessageToChat()
         })
-
     })
+}
+const addMessageToChat = (content, username) => {
 
+    const allMessages = document.querySelector(".allMessages");
+    const messagesDiv = document.createElement("div");
+    messagesDiv.classList.add("d-flex", "border", "border-1", "my-2");
+    messagesDiv.style.width = "100%"
 
+    const messageContent = document.createElement("span");
+    messageContent.textContent = content;
+
+    if(username === "emiliech"){
+        messagesDiv.style.justifyContent = "flex-end"
+        messageContent.style.textAlign = "right";
+    }else{
+        messageContent.style.textAlign = "left";
+        messagesDiv.style.justifyContent = "flex-start"
+    }
+
+    messagesDiv.appendChild(messageContent);
+    allMessages.appendChild(messagesDiv);
 }
 if(!token){
     displayLoginForm()
