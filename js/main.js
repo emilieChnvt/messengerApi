@@ -132,14 +132,26 @@ const displayMessages = ()=>{
         chat.classList.add("visible");
 
         console.log(res)
-        res.forEach(msg=>{
-            const allMessages = document.querySelector(".allMessages");
-            let message = `<div class="border border-1">
-                                    <span>${msg.content}</span>
+        const allMessages = document.querySelector(".allMessages");
 
-                                  </div>`
-            console.log(message);
-           allMessages.innerHTML += message;
+        res.forEach(msg=>{
+            const messagesDiv = document.createElement("div");
+            messagesDiv.classList.add("d-flex", "border", "border-1", "my-2");
+            messagesDiv.style.width = "100%"
+
+            const messageContent = document.createElement("span");
+            messageContent.textContent = msg.content;
+
+           if(msg.author.username === "emiliech"){
+               messagesDiv.style.justifyContent = "flex-end"
+               messageContent.style.textAlign = "right";
+           }else{
+               messageContent.style.textAlign = "left";
+               messagesDiv.style.justifyContent = "flex-start"
+           }
+
+           messagesDiv.appendChild(messageContent);
+           allMessages.appendChild(messagesDiv);
         })
     })
 }
