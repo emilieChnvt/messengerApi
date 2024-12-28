@@ -7,6 +7,7 @@ const discussionsGroupePage = document.querySelector(".discussionsGroupePage");
 const discussionsPrivePage = document.querySelector(".discussionsPrivePage");
 const grp = document.querySelector(".grp");
 const inputMessage = document.querySelector(".inputMessage");
+const chatPrive = document.querySelector(".chatPrive");
 
 
 
@@ -164,7 +165,6 @@ const displayConvPrive = (itemId) =>{
     discussionsPrivePage.classList.add("hidden");
     discussionsPrivePage.classList.remove("visible");
 
-    const chatPrive = document.querySelector(".chatPrive");
     chatPrive.classList.add("visble");
     chatPrive.classList.remove("hidden");
     displayArrowToGoBack()
@@ -231,6 +231,9 @@ const goBack = () => {
 
     chat.classList.add("hidden");
     chat.classList.remove("visible");
+
+    chatPrive.classList.add("hidden");
+    chatPrive.classList.remove("visible");
     removeArrowToGoBack()
 }
 const displayMessages = () => {
