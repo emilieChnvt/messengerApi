@@ -120,10 +120,6 @@ const chooseBtnConv = ()=> {
     })
 }
 const displayChatConvPrive = ()=>{
-    discussionsGroupePage.classList.add("hidden");
-    discussionsGroupePage.classList.remove("visible");
-
-    discussionsPrivePage.classList.add("visble");
 
     const allConv = document.querySelector(".allConvPrives");
     allConv.innerHTML = "";
@@ -132,7 +128,8 @@ const displayChatConvPrive = ()=>{
         console.log(res);
 
         res.forEach((item)=>{
-            let conv = `<div class="grpPrive d-flex align-items-center justify-content-between border rounded-3 px-3 py-1">
+            console.log(item);
+            let conv = `<div class="grpPrive d-flex align-items-center justify-content-between border rounded-3 px-3 py-1" id="${item.id}">
                                     <div class=" d-flex align-items-center justify-content-center">
                                         <div class="nameGroupe rounded-circle photoProfil border border-1 me-3"></div>
                                         <p class="pt-3 me-2">${item.with.username}</p>
@@ -152,23 +149,42 @@ const displayChatConvPrive = ()=>{
 }
 
 const toogleBtnToShowConvPrive = () => {
-    const grp = document.querySelector(".grpPrive");
-    grp.addEventListener("click", ()=>{
-        displayConvPrive()
-    })
+    const grp = document.querySelectorAll(".grpPrive");
+    grp.forEach((item)=> {
+        item.addEventListener('click', () => {
+            console.log(item.id)
 
+            displayConvPrive(item.id);
+
+        })
+
+    })
 }
-const displayConvPrive = () =>{
+const displayConvPrive = (itemId) =>{
     discussionsPrivePage.classList.add("hidden");
     discussionsPrivePage.classList.remove("visible");
     displayArrowToGoBack()
-    displayMessagesPrive()
+    displayMessagesPrive(itemId)
 }
-const displayMessagesPrive = () =>{
-    const chat = document.querySelector(".chat");
-
+const displayMessagesPrive = (itemId) =>{
+    const chat = document.querySelector(".chatPrive");
     chat.classList.add("visible");
     chat.classList.remove("hidden");
+
+    getConvPrive(itemId).then((res)=>{
+        console.log(res);
+        if(res && res.messages){
+            const allMessages = document.querySelector(".allMessages");
+            allMessages.innerHTML = "";
+
+            res.messages.forEach((msg)=>{
+                addMessageToChat(msg)
+            })
+        }
+
+
+
+    })
 
 
 }
@@ -443,7 +459,7 @@ async function convsPrive(){
             return data
         })
 }
-async function getConvPrive(id){
+async function getConvPrive(itemId){
     let params ={
         method: "GET",
         headers: {
@@ -451,7 +467,7 @@ async function getConvPrive(id){
             "Authorization": "Bearer " + token
         }
     }
-    return await fetch(`https://b1messenger.esdlyon.dev/api/private/conversation/${id}`, params)
+    return await fetch(`https://b1messenger.esdlyon.dev/api/private/conversation/${itemId}`, params)
         .then(res => res.json())
         .then(data => {
             console.log(data)
