@@ -115,8 +115,37 @@ const chooseBtnConv = ()=> {
             discussionsPrivePage.classList.remove("hidden");
             discussionsPrivePage.classList.add("visible");
             removeArrowToGoBack()
+            displayChatConvPrive()
         })
     })
+}
+const displayChatConvPrive = ()=>{
+    discussionsGroupePage.classList.add("hidden");
+    discussionsGroupePage.classList.remove("visible");
+
+    discussionsPrivePage.classList.add("visble");
+
+    const allConv = document.querySelector(".allConvPrives");
+    allConv.innerHTML = "";
+
+    convsPrive().then((res)=>{
+        console.log(res);
+
+        res.forEach((item)=>{
+            let conv = `<div class="grp d-flex align-items-center justify-content-between border rounded-3 px-3 py-1">
+                                    <div class=" d-flex align-items-center justify-content-center">
+                                        <div class="nameGroupe rounded-circle photoProfil border border-1 me-3"></div>
+                                        <p class="pt-3 me-2">${item.with.username}</p>
+                                        <p class="size pt-3">${item.lastMessage.content}</p>
+                                    </div>
+                                    <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 320 512" style="width:14px"><path d="M310.6 233.4c12.5 12.5 12.5 32.8 0 45.3l-192 192c-12.5 12.5-32.8 12.5-45.3 0s-12.5-32.8 0-45.3L242.7 256 73.4 86.6c-12.5-12.5-12.5-32.8 0-45.3s32.8-12.5 45.3 0l192 192z"/></svg>
+                               </div>`
+
+            allConv.innerHTML += conv
+        })
+    })
+    removeArrowToGoBack()
+    toogleBtnToShowConv()
 }
 const displayChatConv=()=>{
 
@@ -374,6 +403,21 @@ async function deleteMessage(id){
         })
 }
 
+async function convsPrive(){
+    let params ={
+        method: "GET",
+        headers: {
+            "Content-Type": "application/json",
+            "Authorization": "Bearer " + token
+        }
+    }
+    return await fetch('https://b1messenger.esdlyon.dev/api/private/conversations', params)
+        .then(res => res.json())
+        .then(data => {
+            console.log(data)
+            return data
+        })
+}
 async function emojiReaction(id, reaction){
     let params ={
         method: "GET",
