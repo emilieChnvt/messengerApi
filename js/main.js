@@ -14,37 +14,67 @@ let token = null;
 const toSignUp = document.querySelector(".toSignUp");
 const toSignIn = document.querySelector(".toSignIn");
 const loginPage = document.querySelector(".login");
-const createAccount = document.querySelector(".createAccount");
-toSignUp.addEventListener("click", () => {
-    login.classList.add("hidden");
-    login.classList.remove("visible");
+const createAccountPage = document.querySelector(".createAccount");
 
-    createAccount.classList.add("visible");
-    createAccount.classList.remove("hidden");
-
-})
 toSignIn.addEventListener("click", () => {
-    createAccount.classList.add("hidden");
-    createAccount.classList.remove("visible");
+    createAccountPage.classList.add("hidden");
+    createAccountPage.classList.remove("visible");
 
     login.classList.add("visible");
     login.classList.remove("hidden");
 
 })
 
+const createAccount=()=>{
+    const username = document.querySelector(".usernameAccount");
+    const password = document.querySelector(".passwordAccount");
+    const submit = document.querySelector(".submitAccount");
+    submit.addEventListener("click", (e) => {
+        e.preventDefault();
+        register(username.value, password.value)
+            .then((response) => {
+                console.log(response);
+                if (response.status === 200) {
+                    createAccountPage.classList.add("hidden");
+                    createAccountPage.classList.remove("visible");
 
+                    login.classList.remove("hidden");
+                    login.classList.add("visible");
+                }
+            })
+    })
+    toSignIn.addEventListener("click", () => {
+        createAccountPage.classList.add("hidden");
+        createAccountPage.classList.remove("visible");
+
+        login.classList.add("visible");
+        login.classList.remove("hidden");
+
+    })
+
+}
 const displayLoginForm = ()=>{
 
     const username = document.querySelector(".username");
     const password = document.querySelector(".password");
     const submit = document.querySelector(".submit");
-    submit.addEventListener('click', ()=>{
+
+    submit.addEventListener('click', (e)=>{
+        e.preventDefault()
         getToken(username.value, password.value).then((res)=>{
             if(res.token){
-
                 displayHomeChat()
             }
         })
+    })
+    toSignUp.addEventListener("click", () => {
+        login.classList.add("hidden");
+        login.classList.remove("visible");
+
+        createAccountPage.classList.add("visible");
+        createAccountPage.classList.remove("hidden");
+
+        createAccount()
     })
 }
 const displayHomeChat = ()=> {
@@ -219,6 +249,23 @@ if(!token){
     displayHomeChat()
 }
 
+async function register(username, password){
+    let params={
+        method: "POST",
+        headers: {
+            "Content-Type": "application/json"
+        },
+        body: JSON.stringify({
+            username: username,
+            password:password,
+        })
+    }
+    return await fetch('https://b1messenger.esdlyon.dev/register', params)
+    .then(res => res.json())
+    .then(data => {
+        return data
+    })
+}
 async function getToken(username, password) {
     let params = {
         method: "POST",
@@ -238,8 +285,6 @@ async function getToken(username, password) {
             return data
         })
 }
-
-
 async function getMessages() {
     let parameters = {
         method: "GET",
