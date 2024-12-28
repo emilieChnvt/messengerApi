@@ -219,7 +219,10 @@ const addMessageToChat = (message) => {
     const messageContent = document.createElement("span");
     messageContent.textContent = message.content;
 
-    const trashElement = deleteElement(messagesDiv, message)
+    if(message.author.username === "emiliech"){
+        const trashElement = deleteElement(messagesDiv, message)
+        messagesDiv.appendChild(trashElement);
+    }
     if(message.author.username === "emiliech"){
         messagesDiv.style.justifyContent = "flex-end"
         messageContent.style.textAlign = "right";
@@ -229,7 +232,7 @@ const addMessageToChat = (message) => {
     }
 
     messagesDiv.appendChild(messageContent);
-    messagesDiv.appendChild(trashElement);
+
     allMessages.appendChild(messagesDiv);
 
     //faire défiler pr voir new message
@@ -240,17 +243,11 @@ function deleteElement(messagesDiv, message){
     trash.innerHTML = '🗑️'
     trash.style.cursor = "pointer";
 
-    if(message.author.username === "emiliech"){
-        trash.style.textAlign = "right";
-    }
     trash.addEventListener("click", ()=>{
         deleteMessage(message.id).then((res)=> {
-            console.log(res)
-
+                messagesDiv.remove()
         })
     })
-
-
     return trash
 }
 
