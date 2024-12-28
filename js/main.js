@@ -163,31 +163,24 @@ const toogleBtnToShowConvPrive = () => {
 const displayConvPrive = (itemId) =>{
     discussionsPrivePage.classList.add("hidden");
     discussionsPrivePage.classList.remove("visible");
+
+    const chatPrive = document.querySelector(".chatPrive");
+    chatPrive.classList.add("visble");
+    chatPrive.classList.remove("hidden");
     displayArrowToGoBack()
     displayMessagesPrive(itemId)
 }
 const displayMessagesPrive = (itemId) =>{
-    const chat = document.querySelector(".chatPrive");
-    chat.classList.add("visible");
-    chat.classList.remove("hidden");
+    const allMessagesPrives = document.querySelector(".allMessagesPrives");
+    allMessagesPrives.innerHTML = "";  // Réinitialise la liste des messages privés
 
     getConvPrive(itemId).then((res)=>{
         console.log(res);
-        if(res && res.privateMessages){
-            const allMessages = document.querySelector(".allMessages");
-            allMessages.innerHTML = "";
-            console.log(allMessages);
 
             res.privateMessages.forEach((msg)=>{
-                addMessageToChat(msg)
+                addMessageToChat(msg, 'private')
             })
-        }
-
-
-
     })
-
-
 }
 const displayChatConv=()=>{
 
@@ -241,6 +234,9 @@ const goBack = () => {
     removeArrowToGoBack()
 }
 const displayMessages = () => {
+    const allMessages = document.querySelector(".allMessages");
+    allMessages.innerHTML = "";  // Réinitialise la liste des messages
+
     const chat = document.querySelector(".chat");
 
     chat.classList.add("visible");
@@ -253,7 +249,7 @@ const displayMessages = () => {
         console.log(res)
 
         res.forEach(msg => {
-            addMessageToChat(msg)
+            addMessageToChat(msg, 'group')
         })
     })
 
@@ -277,7 +273,7 @@ const displayInputMessage = () => {
                         content:message,
                         author:{ username:'emiliech'},
                         id: newMessage.id,
-                    })
+                    }, 'group')
                 })
 
             })
@@ -287,9 +283,15 @@ const displayInputMessage = () => {
 
     })
 }
-const addMessageToChat = (message) => {
+const addMessageToChat = (message, type) => {
+    let allMessagesContainer;
 
-    const allMessages = document.querySelector(".allMessages");
+    if(type === 'group'){
+        allMessagesContainer = document.querySelector(".allMessages");
+    }else if (type === 'private'){
+        allMessagesContainer = document.querySelector(".allMessagesPrives");
+    }
+
     const messagesDiv = document.createElement("div");
     messagesDiv.classList.add("d-flex", "border", "border-1", "my-2");
     messagesDiv.style.width = "100%"
@@ -315,10 +317,10 @@ const addMessageToChat = (message) => {
 
     messagesDiv.appendChild(messageContent);
 
-    allMessages.appendChild(messagesDiv);
+    allMessagesContainer.appendChild(messagesDiv);
 
     //faire défiler pr voir new message
-    allMessages.scrollTop = allMessages.scrollHeight;
+    allMessagesContainer.scrollTop = allMessagesContainer.scrollHeight;
 
 }
 const deleteElement=(messagesDiv, messageId)=>{
