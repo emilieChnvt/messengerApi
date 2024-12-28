@@ -198,10 +198,17 @@ const displayInputMessage = () => {
         if(message){
             newMessage(message).then((res)=> {
                 console.log(res);
-                addMessageToChat({
-                    content:message,
-                    author:{ username:'emiliech'}
+                //pour récupérer les messages et les id
+                getMessages().then(res => {
+                    // Le dernier message ajouté est généralement le plus récent
+                    const newMessage = res[res.length - 1];
+                    addMessageToChat({
+                        content:message,
+                        author:{ username:'emiliech'},
+                        id: newMessage.id,
+                    })
                 })
+
             })
             inputMessage.value = "";
         }
@@ -219,8 +226,12 @@ const addMessageToChat = (message) => {
     const messageContent = document.createElement("span");
     messageContent.textContent = message.content;
 
+    if(message.id){
+        messagesDiv.setAttribute("data-message-id", message.id);
+    }
+    console.log(message)
     if(message.author.username === "emiliech"){
-        const trashElement = deleteElement(messagesDiv, message)
+        const trashElement = deleteElement(messagesDiv, message.id)
         messagesDiv.appendChild(trashElement);
     }
     if(message.author.username === "emiliech"){
@@ -237,16 +248,20 @@ const addMessageToChat = (message) => {
 
     //faire défiler pr voir new message
     allMessages.scrollTop = allMessages.scrollHeight;
+
 }
-function deleteElement(messagesDiv, message){
+const deleteElement=(messagesDiv, messageId)=>{
     const trash = document.createElement("p");
     trash.innerHTML = '🗑️'
     trash.style.cursor = "pointer";
 
     trash.addEventListener("click", ()=>{
-        deleteMessage(message.id).then((res)=> {
+        if(messageId){
+            deleteMessage(messageId).then((res)=> {
                 messagesDiv.remove()
-        })
+            })
+        }
+
     })
     return trash
 }
@@ -337,6 +352,7 @@ async function newMessage(inputMessage){
     return await fetch('https://b1messenger.esdlyon.dev/api/messages/new', params)
         .then(res => res.json())
         .then(data => {
+console.log(data)
             return data
         })
 
