@@ -374,3 +374,19 @@ async function deleteMessage(id){
         })
 }
 
+async function emojiReaction(id, reaction){
+    let params ={
+        method: "GET",
+        headers: {
+            "Content-Type": "application/json",
+            "Authorization": "Bearer " + token
+        }
+    }
+    return await fetch(`https://b1messenger.esdlyon.dev/api/reaction/message/${id}/${reaction}`, params)
+    .then(res => res.json())
+    .then(data => {
+        console.log(data)
+        return data
+    })
+}
+
