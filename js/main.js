@@ -173,11 +173,12 @@ const displayMessagesPrive = (itemId) =>{
 
     getConvPrive(itemId).then((res)=>{
         console.log(res);
-        if(res && res.messages){
+        if(res && res.privateMessages){
             const allMessages = document.querySelector(".allMessages");
             allMessages.innerHTML = "";
+            console.log(allMessages);
 
-            res.messages.forEach((msg)=>{
+            res.privateMessages.forEach((msg)=>{
                 addMessageToChat(msg)
             })
         }
