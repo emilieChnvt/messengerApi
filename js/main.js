@@ -132,7 +132,7 @@ const displayChatConvPrive = ()=>{
         console.log(res);
 
         res.forEach((item)=>{
-            let conv = `<div class="grp d-flex align-items-center justify-content-between border rounded-3 px-3 py-1">
+            let conv = `<div class="grpPrive d-flex align-items-center justify-content-between border rounded-3 px-3 py-1">
                                     <div class=" d-flex align-items-center justify-content-center">
                                         <div class="nameGroupe rounded-circle photoProfil border border-1 me-3"></div>
                                         <p class="pt-3 me-2">${item.with.username}</p>
@@ -142,10 +142,35 @@ const displayChatConvPrive = ()=>{
                                </div>`
 
             allConv.innerHTML += conv
+            toogleBtnToShowConvPrive()
+
         })
     })
     removeArrowToGoBack()
-    toogleBtnToShowConv()
+
+
+}
+
+const toogleBtnToShowConvPrive = () => {
+    const grp = document.querySelector(".grpPrive");
+    grp.addEventListener("click", ()=>{
+        displayConvPrive()
+    })
+
+}
+const displayConvPrive = () =>{
+    discussionsPrivePage.classList.add("hidden");
+    discussionsPrivePage.classList.remove("visible");
+    displayArrowToGoBack()
+    displayMessagesPrive()
+}
+const displayMessagesPrive = () =>{
+    const chat = document.querySelector(".chat");
+
+    chat.classList.add("visible");
+    chat.classList.remove("hidden");
+
+
 }
 const displayChatConv=()=>{
 
@@ -203,7 +228,7 @@ const displayMessages = () => {
 
     chat.classList.add("visible");
     chat.classList.remove("hidden");
-setTimeout(()=>{
+
     getMessages().then(res => {
         chat.classList.remove("hidden");
         chat.classList.add("visible");
@@ -215,7 +240,7 @@ setTimeout(()=>{
         })
     })
 
-})
+
 
     displayInputMessage()
 }
@@ -412,6 +437,21 @@ async function convsPrive(){
         }
     }
     return await fetch('https://b1messenger.esdlyon.dev/api/private/conversations', params)
+        .then(res => res.json())
+        .then(data => {
+            console.log(data)
+            return data
+        })
+}
+async function getConvPrive(id){
+    let params ={
+        method: "GET",
+        headers: {
+            "Content-Type": "application/json",
+            "Authorization": "Bearer " + token
+        }
+    }
+    return await fetch(`https://b1messenger.esdlyon.dev/api/private/conversation/${id}`, params)
         .then(res => res.json())
         .then(data => {
             console.log(data)
