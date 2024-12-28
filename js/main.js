@@ -161,7 +161,7 @@ setTimeout(()=>{
         console.log(res)
 
         res.forEach(msg => {
-            addMessageToChat(msg.content)
+            addMessageToChat(msg)
         })
     })
 
@@ -175,7 +175,7 @@ const displayInputMessage = () => {
     btnMessage.addEventListener("click", ()=>{
         const message = inputMessage.value;
         if(message){
-            newMessage(inputMessage.value).then((res)=> {
+            newMessage(message).then((res)=> {
                 console.log(res);
                 addMessageToChat({
                     content:message,
@@ -186,7 +186,7 @@ const displayInputMessage = () => {
 
     })
 }
-const addMessageToChat = (content, username) => {
+const addMessageToChat = (message) => {
 
     const allMessages = document.querySelector(".allMessages");
     const messagesDiv = document.createElement("div");
@@ -194,9 +194,9 @@ const addMessageToChat = (content, username) => {
     messagesDiv.style.width = "100%"
 
     const messageContent = document.createElement("span");
-    messageContent.textContent = content;
+    messageContent.textContent = message.content;
 
-    if(username === "emiliech"){
+    if(message.author.username === "emiliech"){
         messagesDiv.style.justifyContent = "flex-end"
         messageContent.style.textAlign = "right";
     }else{
