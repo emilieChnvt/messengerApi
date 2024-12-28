@@ -16,15 +16,6 @@ const toSignIn = document.querySelector(".toSignIn");
 const loginPage = document.querySelector(".login");
 const createAccountPage = document.querySelector(".createAccount");
 
-toSignIn.addEventListener("click", () => {
-    createAccountPage.classList.add("hidden");
-    createAccountPage.classList.remove("visible");
-
-    login.classList.add("visible");
-    login.classList.remove("hidden");
-
-})
-
 const createAccount=()=>{
     const username = document.querySelector(".usernameAccount");
     const password = document.querySelector(".passwordAccount");
@@ -228,6 +219,7 @@ const addMessageToChat = (message) => {
     const messageContent = document.createElement("span");
     messageContent.textContent = message.content;
 
+    const trashElement = deleteElement(messagesDiv, message)
     if(message.author.username === "emiliech"){
         messagesDiv.style.justifyContent = "flex-end"
         messageContent.style.textAlign = "right";
@@ -237,10 +229,29 @@ const addMessageToChat = (message) => {
     }
 
     messagesDiv.appendChild(messageContent);
+    messagesDiv.appendChild(trashElement);
     allMessages.appendChild(messagesDiv);
 
     //faire défiler pr voir new message
     allMessages.scrollTop = allMessages.scrollHeight;
+}
+function deleteElement(messagesDiv, message){
+    const trash = document.createElement("p");
+    trash.innerHTML = '🗑️'
+    trash.style.cursor = "pointer";
+
+    if(message.author.username === "emiliech"){
+        trash.style.textAlign = "right";
+    }
+    trash.addEventListener("click", ()=>{
+        deleteMessage(message.id).then((res)=> {
+            console.log(res)
+
+        })
+    })
+
+
+    return trash
 }
 
 if(!token){
@@ -333,7 +344,7 @@ async function newMessage(inputMessage){
         })
 
 }
-async function deleteMessage(message){
+async function deleteMessage(id){
     let params ={
         method: "DELETE",
         headers: {
@@ -341,7 +352,7 @@ async function deleteMessage(message){
             "Authorization": "Bearer " + token
         }
     }
-    return await fetch('https://b1messenger.esdlyon.dev/api/messages/delete/13', params)
+    return await fetch(`https://b1messenger.esdlyon.dev/api/messages/delete/${id}`, params)
         .then(res => res.json())
         .then(data => {
             console.log(data)
