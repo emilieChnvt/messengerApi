@@ -182,7 +182,9 @@ const displayInputMessage = () => {
                     author:{ username:'emiliech'}
                 })
             })
+            inputMessage.value = "";
         }
+
 
     })
 }
@@ -210,6 +212,7 @@ const addMessageToChat = (message) => {
     //faire défiler pr voir new message
     allMessages.scrollTop = allMessages.scrollHeight;
 }
+
 if(!token){
     displayLoginForm()
 }else{
@@ -284,5 +287,21 @@ async function newMessage(inputMessage){
             return data
         })
 
+}
+async function deleteMessage(message){
+    let params ={
+        method: "DELETE",
+        headers: {
+            "Content-Type": "application/json",
+            "Authorization": "Bearer " + token
+        }
+    }
+    return await fetch('https://b1messenger.esdlyon.dev/api/messages/delete/13', params)
+        .then(res => res.json())
+        .then(data => {
+            console.log(data)
+            return data
+
+        })
 }
 
