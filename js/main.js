@@ -320,7 +320,7 @@ const addMessageToChat = (message, type) => {
     messagesDiv.style.width = "100%"
 
     const messageContent = document.createElement("span");
-    messageContent.textContent = message.content;
+    messageContent.textContent = message.content ;
 
     if (message.id) {
         messagesDiv.setAttribute("data-message-id", message.id);
@@ -365,32 +365,32 @@ const editMessage = (message, messageId) => {
     const allMessagesContainer = document.querySelector(".allMessages");
     const messagesDiv = allMessagesContainer.querySelector(`[data-message-id="${messageId}"]`);
 
-    if (!messagesDiv) {
-        console.error(`Aucun message trouvé avec l'ID: ${messageId}`);
-        return;
-    }
+
     const editInput = document.createElement("input");
     editInput.type = "text";
     editInput.value = message.content;
 
     const saveButton = document.createElement("button");
     saveButton.textContent = "Save";
+
     saveButton.addEventListener("click", ()=>{
         const newContent = editInput.value;
+
         if(newContent){
             updateMessage(message.id, newContent).then((res)=> {
                 console.log(res)
-                messagesDiv.querySelector("span").innerHTML = res.content;
+                messagesDiv.querySelector("span").innerHTML = newContent;
                 messagesDiv.removeChild(editInput);
                 messagesDiv.removeChild(saveButton);
 
             })
+
         }
+
     })
+
     messagesDiv.appendChild(editInput);
     messagesDiv.appendChild(saveButton);
-
-
 
 }
 const reactionDiv = (message)=> {
