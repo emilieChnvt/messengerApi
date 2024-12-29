@@ -379,12 +379,12 @@ const reactionDiv = (message)=> {
         reactionMenu.style.display = reactionMenu.style.display = "none" ? "block" : "none";
     })
     reactionMenu.addEventListener("click", (e)=>{
-        if(e.target.classList.contains("reaction-option")){
-            console.log("Reaction Type:", reactionType);
-            console.log("Message ID:", message.id);
+        if(e.target.classList.contains("reactionOption")){
             const reactionType = e.target.getAttribute("data-reaction");
             addReactionPrivateMessage(message.id, reactionType)
-            reactionMenu.style.display = "none"
+            reactionMenu.style.display = "none";
+            console.log("Reaction Type:", reactionType);
+            console.log("Message ID:", message.id);
         }
     })
     reactionContainer.appendChild(reactionButton);
