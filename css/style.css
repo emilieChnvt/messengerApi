@@ -34,3 +34,10 @@
 .size{
     font-size: 0.5rem;
 }
+.reactionMenu{
+    display: none;
+    position: absolute;
+    background-color: white;
+    border: 1px solid #ccc;
+    padding: 5px;
+}

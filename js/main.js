@@ -127,8 +127,6 @@ const displayChatConvPrive = ()=>{
     allConv.innerHTML = "";
 
     convsPrive().then((res)=>{
-        console.log(res);
-
         res.forEach((item)=>{
             console.log(item);
             let conv = `<div class="grpPrive d-flex align-items-center justify-content-between border rounded-3 px-3 py-1" id="${item.id}">
@@ -153,8 +151,6 @@ const toogleBtnToShowConvPrive = () => {
     const grp = document.querySelectorAll(".grpPrive");
     grp.forEach((item)=> {
         item.addEventListener('click', () => {
-            console.log(item.id)
-
             displayConvPrive(item.id);
 
         })
@@ -175,12 +171,11 @@ const displayMessagesPrive = (itemId) =>{
     allMessagesPrives.innerHTML = "";  // Réinitialise la liste des messages privés
 
     getConvPrive(itemId).then((res)=>{
-        console.log(res);
-
             res.privateMessages.forEach((msg)=>{
                 addMessageToChat(msg, 'private')
             })
         addMessagePrive(itemId)
+        addReactionPrivateMessage()
     })
 
 }
@@ -200,6 +195,12 @@ const addMessagePrive = (itemId) => {
         })
     })
 }
+const addReactionPrivateMessage = () => {
+        emojiReaction(res.id).then((res)=>{
+            console.log(res)
+        })
+}
+
 const displayChatConv=()=>{
 
     discussionsGroupePage.classList.add("visible");
@@ -336,13 +337,58 @@ const addMessageToChat = (message, type) => {
         messagesDiv.style.justifyContent = "flex-start"
     }
 
+    let reactions = reactionDiv(message)
+
     messagesDiv.appendChild(messageContent);
+    messagesDiv.appendChild(reactions);
 
     allMessagesContainer.appendChild(messagesDiv);
 
     //faire défiler pr voir new message
     allMessagesContainer.scrollTop = allMessagesContainer.scrollHeight;
 
+}
+const reactionDiv = (message)=> {
+    const reactionContainer = document.createElement("div");
+    reactionContainer.classList.add("reactionContainer");
+    reactionContainer.style.marginLeft = "10px";
+    reactionContainer.style.position="relative";
+
+    //btn pour afficher réactions
+    const reactionButton = document.createElement("span");
+    reactionButton.innerHTML= "+"
+    reactionButton.style.cursor = "pointer";
+
+    const reactionMenu = document.createElement("div");
+    reactionMenu.classList.add("reactionMenu");
+
+    const reactions = [
+        { type:"happy", emoji:"🙂"},
+        { type:"sadd", emoji:"😭"},
+        { type:"cryy", emoji:"😢"},
+        { type:"vomi", emoji:"🤢"},
+    ]
+   reactions.forEach(reaction => {
+       const reactionOption = document.createElement("span");
+       reactionOption.classList.add("reactionOption");
+       reactionOption.setAttribute("data-reaction", reaction.type)
+       reactionOption.textContent = reaction.emoji;
+       reactionMenu.appendChild(reactionOption);
+   })
+    reactionButton.addEventListener("click", ()=>{
+        reactionMenu.style.display = reactionMenu.style.display = "none" ? "block" : "none";
+    })
+    reactionMenu.addEventListener("click", (e)=>{
+        if(e.target.classList.contains("reaction-option")){
+            const reactionType = e.target.getAttribute("data-reaction");
+            addReactionPrivateMessage(message.id, reactionType)
+            reactionMenu.style.display = "none"
+        }
+    })
+    reactionContainer.appendChild(reactionButton);
+    reactionContainer.appendChild(reactionMenu);
+
+    return reactionContainer;
 }
 const deleteElement=(messagesDiv, messageId)=>{
     const trash = document.createElement("p");
@@ -523,8 +569,9 @@ async function emojiReaction(id, reaction){
             "Content-Type": "application/json",
             "Authorization": "Bearer " + token
         }
+
     }
-    return await fetch(`https://b1messenger.esdlyon.dev/api/reaction/message/${id}/${reaction}`, params)
+    return await fetch(`https://b1messenger.esdlyon.dev/api/private/message/${id}/${reaction}`, params)
     .then(res => res.json())
     .then(data => {
         console.log(data)
