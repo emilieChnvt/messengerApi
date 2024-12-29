@@ -120,6 +120,7 @@ const chooseBtnConv = ()=> {
         })
     })
 }
+
 const displayChatConvPrive = ()=>{
 
     const allConv = document.querySelector(".allConvPrives");
@@ -148,7 +149,6 @@ const displayChatConvPrive = ()=>{
 
 
 }
-
 const toogleBtnToShowConvPrive = () => {
     const grp = document.querySelectorAll(".grpPrive");
     grp.forEach((item)=> {
@@ -180,6 +180,24 @@ const displayMessagesPrive = (itemId) =>{
             res.privateMessages.forEach((msg)=>{
                 addMessageToChat(msg, 'private')
             })
+        addMessagePrive(itemId)
+    })
+
+}
+const addMessagePrive = (itemId) => {
+    const inputMessagePrive = document.querySelector(".inputMessagePrive");
+    const btnMessagePrive = document.querySelector(".btnMessagePrive");
+    btnMessagePrive.addEventListener("click", ()=>{
+        newPrivateMessage(inputMessagePrive.value, itemId).then((res)=>{
+           addMessageToChat(
+               {
+                   content:inputMessagePrive.value,
+                   author: { username: "emiliech"},
+               },
+               "private"
+           );
+           inputMessagePrive.value = "";
+        })
     })
 }
 const displayChatConv=()=>{
@@ -474,6 +492,24 @@ async function getConvPrive(itemId){
         }
     }
     return await fetch(`https://b1messenger.esdlyon.dev/api/private/conversation/${itemId}`, params)
+        .then(res => res.json())
+        .then(data => {
+            console.log(data)
+            return data
+        })
+}
+async function newPrivateMessage(inputMessagePrive, itemId){
+    let params ={
+        method: "POST",
+        headers: {
+            "Content-Type": "application/json",
+            "Authorization": "Bearer " + token
+        },
+        body: JSON.stringify({
+            content: inputMessagePrive
+        })
+    }
+    return await fetch(`https://b1messenger.esdlyon.dev/api/private/message/${itemId}`, params)
         .then(res => res.json())
         .then(data => {
             console.log(data)
