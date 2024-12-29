@@ -581,3 +581,21 @@ async function emojiReaction(messageId, reactionType){
     })
 }
 
+async function editMessage(messageId){
+    let params ={
+        method: "PUT",
+        headers: {
+            "Content-Type": "application/json",
+            "Authorization": "Bearer " + token
+        },
+        body: JSON.stringify({
+            content: inputMessage
+        })
+    }
+    return await fetch (`https://b1messenger.esdlyon.dev/api/messages/${messageId}/edit`, params)
+    .then(res => res.json())
+    .then(data => {
+        console.log(data)
+        return data
+    })
+}
