@@ -195,8 +195,8 @@ const addMessagePrive = (itemId) => {
         })
     })
 }
-const addReactionPrivateMessage = () => {
-        emojiReaction(res.id).then((res)=>{
+const addReactionPrivateMessage = (messageId, reactionType) => {
+        emojiReaction(messageId, reactionType).then((res)=>{
             console.log(res)
         })
 }
@@ -380,6 +380,8 @@ const reactionDiv = (message)=> {
     })
     reactionMenu.addEventListener("click", (e)=>{
         if(e.target.classList.contains("reaction-option")){
+            console.log("Reaction Type:", reactionType);
+            console.log("Message ID:", message.id);
             const reactionType = e.target.getAttribute("data-reaction");
             addReactionPrivateMessage(message.id, reactionType)
             reactionMenu.style.display = "none"
@@ -562,7 +564,7 @@ async function newPrivateMessage(inputMessagePrive, itemId){
             return data
         })
 }
-async function emojiReaction(id, reaction){
+async function emojiReaction(messageId, reactionType){
     let params ={
         method: "GET",
         headers: {
@@ -571,7 +573,7 @@ async function emojiReaction(id, reaction){
         }
 
     }
-    return await fetch(`https://b1messenger.esdlyon.dev/api/private/message/${id}/${reaction}`, params)
+    return await fetch(`https://b1messenger.esdlyon.dev/api/private/message/${messageId}/${reactionType}`, params)
     .then(res => res.json())
     .then(data => {
         console.log(data)
