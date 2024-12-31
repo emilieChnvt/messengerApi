@@ -296,7 +296,7 @@ const displayInputMessage = () => {
                         author:{ username:'emiliech'},
                         id: newMessage.id,
                     }, 'group')
-                    toggleMessage()
+
                 })
 
             })
@@ -333,7 +333,7 @@ const addMessageToChat = (message, type) => {
     if (message.author.username === "emiliech") {
         messagesDiv.classList.add("marg")
         messagesDiv.style.justifyContent = "flex-end"
-        messageContent.style.textAlign = "right";
+
 
         const pen = penToEdit(message)
         messagesDiv.prepend(pen);
