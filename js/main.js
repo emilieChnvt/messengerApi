@@ -175,7 +175,18 @@ const displayMessagesPrive = (itemId) =>{
                 addMessageToChat(msg, 'private')
             })
         addMessagePrive(itemId)
-        addReactionPrivateMessage()
+        const messages= document.querySelectorAll(".allMessagesPrives .aMessage .messagesDiv");
+            messages.forEach((message)=>{
+                const messageId = message.getAttribute("data-message-id");
+
+                const reactionsButtons = message.querySelectorAll(".reactionButton");
+                reactionsButtons.forEach((reaction)=>{
+                    reaction.addEventListener("click", ()=>{
+                        const reactionType = button.getAttribute("data-reaction-type");
+                        addReactionPrivateMessage(messageId, reactionType);
+                    })
+                })
+            })
     })
 
 }
@@ -191,12 +202,16 @@ const addMessagePrive = (itemId) => {
                },
                "private"
            );
+
            inputMessagePrive.value = "";
         })
     })
 }
 const addReactionPrivateMessage = (messageId, reactionType) => {
-        emojiReaction(messageId, reactionType).then((res)=>{
+    console.log("Message ID:", messageId);  // Debugging: Check messageId
+    console.log("Reaction Type:", reactionType);  // Debugging: Check reactionType
+
+    emojiReaction(messageId, reactionType).then((res)=>{
             console.log(res)
 
                     const emoji = getEmojiForReaction(reactionType);
@@ -365,6 +380,7 @@ console.log(message)
 
     if (message.id) {
         messagesDiv.setAttribute("data-message-id", message.id);
+        console.log("Private Message ID:", message.id);
     }
 
     if (message.author.username === "emiliech") {
