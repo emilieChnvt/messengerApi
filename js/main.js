@@ -198,7 +198,26 @@ const addMessagePrive = (itemId) => {
 const addReactionPrivateMessage = (messageId, reactionType) => {
         emojiReaction(messageId, reactionType).then((res)=>{
             console.log(res)
+
+                    const emoji = getEmojiForReaction(reactionType)
+                    const reactionContainer = document.createElement("div");
+                    reactionContainer.classList.add("reactionContainer");
+                    reactionContainer.innerHTML = emoji;
+
+                    document.querySelector(".contentContainer").appendChild(reactionContainer);
+
+
+
         })
+}
+const getEmojiForReaction =(reactionType) => {
+    const reactions={
+    "happy": "🙂",
+    "sadd": "😭",
+    "cryy": "😢",
+    "vomi": "🤢"
+    }
+    return reactions[reactionType]
 }
 
 const displayChatConv=()=>{
@@ -454,8 +473,10 @@ const reactionDiv = (message)=> {
     })
     reactionMenu.addEventListener("click", (e)=>{
         if(e.target.classList.contains("reactionOption")){
+
             const reactionType = e.target.getAttribute("data-reaction");
             addReactionPrivateMessage(message.id, reactionType)
+
             reactionMenu.style.display = "none";
             console.log("Reaction Type:", reactionType);
             console.log("Message ID:", message.id);
