@@ -507,7 +507,7 @@ const deleteElement=(messagesDiv, messageId)=>{
     })
     return trash
 }
-const addImageToChat=()=>{
+const addImageToChat=(imageUrl)=>{
     const allMessagesContainer = document.querySelector(".allMessages");
     const messageElement=document.createElement("div");
     messageElement.classList.add("message");
@@ -520,6 +520,24 @@ const addImageToChat=()=>{
     messageElement.appendChild(imageElement);
    allMessagesContainer.appendChild(messageElement);
 }
+document.querySelector(".sendImageButton").addEventListener("click", () => {
+    const imageInput = document.querySelector(".imageUpload");
+    const imageFile = imageInput.files[0];  // Récupère le fichier image sélectionné par l'utilisateur
+console.log(imageFile)
+    if (imageFile) {
+        privatePhoto(imageFile).then((imageId)=>{
+
+            sendMessageWithImage(imageId,'hicds').then((res)=> {
+                const imageUrl = res.imageUrl || res.imageUrl;
+                addImageToChat(imageUrl)
+
+            })
+
+        });
+    } else {
+        alert("Veuillez sélectionner une image avant d'envoyer.");
+    }
+});
 
 if(!token){
     displayLoginForm()
@@ -719,15 +737,35 @@ async function privatePhoto(imageFile){
         let params ={
         method: "POST",
         headers: {
-            "Content-Type": "application/json",
             "Authorization": "Bearer " + token
         },
         body: formData
     }
-    return await fetch('https://b1messenger.esdlyon.dev/api/private/message/3', params)
+    return await fetch('https://b1messenger.esdlyon.dev/api/private/image', params)
     .then(res => res.json())
     .then(data => {
-        console.log(data)
-        return data
+        console.log(data.imageId)
+        return data.imageId
     })
+}
+async function sendMessageWithImage(imageId, content){
+
+
+    let params ={
+        method: "POST",
+        headers: {
+            "Authorization": "Bearer " + token,
+            "Content-Type": "application/json",
+        },
+        body: JSON.stringify({
+            content: content,
+            associatedImages:[imageId]
+        })
+    }
+    return await fetch('https://b1messenger.esdlyon.dev/api/private/message/new', params)
+        .then(res => res.json())
+        .then(data => {
+
+            return data
+        })
 }
