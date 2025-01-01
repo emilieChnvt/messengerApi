@@ -320,6 +320,7 @@ const addMessageToChat = (message, type) => {
 
 
     const messageContent = document.createElement("span");
+    messageContent.classList.add("messageContent");
     messageContent.textContent = message.content ;
 
     if (message.id) {
@@ -364,7 +365,7 @@ const penToEdit=(message)=>{
     })
     return pencil
 }
-const editMessage = (message, messageId) => {
+const editMessage = (message, messageId, ) => {
     const allMessagesContainer = document.querySelector(".allMessages");
     const messagesDiv = allMessagesContainer.querySelector(`[data-message-id="${messageId}"]`);
 
@@ -382,7 +383,7 @@ const editMessage = (message, messageId) => {
         if(newContent){
             updateMessage(message.id, newContent).then((res)=> {
                 console.log(res)
-                messagesDiv.querySelector("span").innerHTML = newContent;
+                messagesDiv.querySelector(".messageContent").innerHTML = newContent;
                 messagesDiv.removeChild(editInput);
                 messagesDiv.removeChild(saveButton);
 
