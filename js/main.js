@@ -314,6 +314,8 @@ const addMessageToChat = (message, type) => {
     } else if (type === 'private') {
         allMessagesContainer = document.querySelector(".allMessagesPrives");
     }
+    const aMessage = document.createElement("div");
+    aMessage.classList.add("aMessage");
 
     const messagesDiv = document.createElement("div");
     messagesDiv.classList.add("messagesDiv");
@@ -328,7 +330,14 @@ console.log(message)
 
     contentContainer.appendChild(messageContent);
 
+    const photoProfil = document.createElement("img");
+    photoProfil.classList.add("photoProfil");
 
+
+    if (message.author.username !== "emiliech" && message.author.image && message.author.image.imageName) {
+        const imageUrl = `https://example.com/uploads/${message.author.image.imageName}`;
+        photoProfil.src = `url(${imageUrl})`;
+    }
 
     if (message.id) {
         messagesDiv.setAttribute("data-message-id", message.id);
@@ -360,10 +369,10 @@ console.log(message)
     contentContainer.appendChild(reactions)
 
     messagesDiv.appendChild(contentContainer);
+    aMessage.appendChild(photoProfil);
+    aMessage.appendChild(messagesDiv);
 
-
-
-    allMessagesContainer.appendChild(messagesDiv);
+    allMessagesContainer.appendChild(aMessage);
 
     //faire défiler pr voir new message
     allMessagesContainer.scrollTop = allMessagesContainer.scrollHeight;
