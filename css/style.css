@@ -59,8 +59,9 @@
 }
 .messagesDiv{
     display: flex;
-    align-items: center;
+    align-items: flex-start;
     justify-content: center;
+    flex-direction: column;
     border:1px solid black;
     padding: 5px 20px;
     border-radius: 50px;
@@ -68,6 +69,10 @@
     width: fit-content;
     position: relative;
     margin-top: 15px;
+}
+.contentContainer{
+    display: flex;
+
 }
 .marg{
     margin-left:auto;
@@ -77,6 +82,9 @@
     background-color: #FFA72D;
     color: white;
     border:none;
+}
+.authorOfMessage{
+    font-size:10px
 }
 
 

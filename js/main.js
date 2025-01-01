@@ -318,10 +318,17 @@ const addMessageToChat = (message, type) => {
     const messagesDiv = document.createElement("div");
     messagesDiv.classList.add("messagesDiv");
 
+console.log(message)
+    const contentContainer = document.createElement("div");
+    contentContainer.classList.add("contentContainer");
 
     const messageContent = document.createElement("span");
     messageContent.classList.add("messageContent");
     messageContent.textContent = message.content ;
+
+    contentContainer.appendChild(messageContent);
+
+
 
     if (message.id) {
         messagesDiv.setAttribute("data-message-id", message.id);
@@ -340,13 +347,20 @@ const addMessageToChat = (message, type) => {
     } else {
         messageContent.style.textAlign = "left";
         messagesDiv.style.justifyContent = "flex-start"
+
+        const authorOfMessage = document.createElement("span");
+        authorOfMessage.classList.add("authorOfMessage");
+        authorOfMessage.textContent = message.author.username ;
+        messagesDiv.appendChild(authorOfMessage)
+
     }
 
     const  reactions = reactionDiv(message)
 
+    contentContainer.appendChild(reactions)
 
-    messagesDiv.appendChild(messageContent);
-    messagesDiv.appendChild(reactions);
+    messagesDiv.appendChild(contentContainer);
+
 
 
     allMessagesContainer.appendChild(messagesDiv);
