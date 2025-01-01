@@ -507,7 +507,19 @@ const deleteElement=(messagesDiv, messageId)=>{
     })
     return trash
 }
+const addImageToChat=()=>{
+    const allMessagesContainer = document.querySelector(".allMessages");
+    const messageElement=document.createElement("div");
+    messageElement.classList.add("message");
 
+    //img
+    const imageElement=document.createElement("img");
+    imageElement.src=imageUrl;
+    imageElement.style.maxWidth="300px";
+
+    messageElement.appendChild(imageElement);
+   allMessagesContainer.appendChild(messageElement);
+}
 
 if(!token){
     displayLoginForm()
