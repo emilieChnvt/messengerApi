@@ -31,6 +31,11 @@
     width: 20px;
     height: 20px;
 }
+.trash{
+    position:absolute;
+    bottom:5px;
+    right:-20px;
+}
 .enterMessage{
     position: fixed;
     bottom: 10px;
@@ -55,15 +60,23 @@
 .messagesDiv{
     display: flex;
     align-items: center;
-
+    justify-content: center;
     border:1px solid black;
-    padding: 10px;
-    border-radius: 5px;
+    padding: 5px 20px;
+    border-radius: 50px;
     box-shadow: 0px 2px 5px rgba(0,0,0,0.1);
     width: fit-content;
+    position: relative;
+    margin-top: 15px;
 }
 .marg{
     margin-left:auto;
-    display: block;
+    display: flex;
 }
+.messagesDivByMe{
+    background-color: #FFA72D;
+    color: white;
+    border:none;
+}
+
 
