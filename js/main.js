@@ -199,13 +199,18 @@ const addReactionPrivateMessage = (messageId, reactionType) => {
         emojiReaction(messageId, reactionType).then((res)=>{
             console.log(res)
 
-                    const emoji = getEmojiForReaction(reactionType)
-                    const reactionContainer = document.createElement("div");
-                    reactionContainer.classList.add("reactionContainer");
-                    reactionContainer.innerHTML = emoji;
+                    const emoji = getEmojiForReaction(reactionType);
+                    const messageElement = document.querySelector(`[data-message-id="${messageId}"]`);
+                    if(messageElement){
+                        const contentContainer =messageElement.querySelector(".contentContainer");
 
-                    document.querySelector(".contentContainer").appendChild(reactionContainer);
+                        const reactionContainer = document.createElement("div");
+                        reactionContainer.classList.add("reactionContainer");
+                        reactionContainer.innerHTML = emoji;
 
+                       contentContainer.appendChild(reactionContainer);
+
+                    }
 
 
         })
