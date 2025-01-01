@@ -303,7 +303,7 @@ const displayMessages = () => {
 
     displayInputMessage()
 }
-const displayInputMessage = () => {
+const displayInputMessage = (messageId, reactionType) => {
 
     const btnMessage = document.querySelector(".btnMessage");
     btnMessage.addEventListener("click", ()=>{
@@ -320,7 +320,7 @@ const displayInputMessage = () => {
                         author:{ username:'emiliech'},
                         id: newMessage.id,
                     }, 'group')
-
+                    emojiReaction(messageId, reactionType)
                 })
 
             })
@@ -681,7 +681,6 @@ async function emojiReaction(messageId, reactionType){
         return data
     })
 }
-
 async function updateMessage(messageId, newContent){
     let params ={
         method: "PUT",
@@ -694,6 +693,26 @@ async function updateMessage(messageId, newContent){
         })
     }
     return await fetch (`https://b1messenger.esdlyon.dev/api/messages/${messageId}/edit`, params)
+    .then(res => res.json())
+    .then(data => {
+        console.log(data)
+        return data
+    })
+}
+async function privatePhoto(imageFile){
+
+        const formData = new FormData();
+        formData.append("image", imageFile);
+
+        let params ={
+        method: "POST",
+        headers: {
+            "Content-Type": "application/json",
+            "Authorization": "Bearer " + token
+        },
+        body: formData
+    }
+    return await fetch('https://b1messenger.esdlyon.dev/api/private/message/3', params)
     .then(res => res.json())
     .then(data => {
         console.log(data)
