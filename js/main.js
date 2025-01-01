@@ -437,7 +437,7 @@ const toggleMessageToAddResponse = (message) => {
     sendResponse.textContent = "envoyer";
 
     sendResponse.addEventListener("click", ()=>{
-        response(message).then((res)=>{
+        response(message.id, responseInput.value).then((res)=>{
             console.log(res);
             displayResponse()
         })
@@ -451,7 +451,7 @@ const toggleMessageToAddResponse = (message) => {
 
 }
 const displayResponse=(messageId, replyData)=>{
-    const messageDiv = document.querySelector(`.messagesDiv[data-message-id="${message.id}"]`);
+    const messageDiv = document.querySelector(`.messagesDiv[data-message-id="${messageId}"]`);
 
     const replyDiv = document.createElement("div");
     replyDiv.classList.add("replyDiv");
