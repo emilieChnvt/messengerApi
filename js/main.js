@@ -207,7 +207,7 @@ const addMessagePrive = (itemId) => {
         })
     })
 }
-const addReactionPrivateMessage = (messageId, reactionType) => {
+const addReactionMessage = (messageId, reactionType) => {
     console.log("Message ID:", messageId);  // Debugging: Check messageId
     console.log("Reaction Type:", reactionType);  // Debugging: Check reactionType
 
@@ -496,7 +496,7 @@ const reactionDiv = (message)=> {
         if(e.target.classList.contains("reactionOption")){
 
             const reactionType = e.target.getAttribute("data-reaction");
-            addReactionPrivateMessage(message.id, reactionType)
+            addReactionMessage(message.id, reactionType)
 
             reactionMenu.style.display = "none";
             console.log("Reaction Type:", reactionType);
@@ -543,9 +543,8 @@ document.querySelectorAll(".sendImageButton").forEach((el)=>{
         const imageFile = imageInput.files[0];  // Récupère le fichier image sélectionné par l'utilisateur
 
 
-
-            privatePhoto(imageFile).then((imageId)=>{
-                console.log(imageId)
+            privatePhoto(imageFile).then((res)=>{
+                console.log(res)
 
                 sendMessageWithImage(imageId,'hicds').then((res)=> {
                     const imageUrl = res.imageUrl || res.imageUrl;
@@ -749,6 +748,25 @@ async function updateMessage(messageId, newContent){
         return data
     })
 }
+async function response(itemId){
+    let params ={
+        method: "POST",
+        headers: {
+            "Content-Type": "application/json",
+            "Authorization": "Bearer " + token
+        },
+        body: JSON.stringify({
+            content: inputMessage
+        })
+    }
+    return await fetch(`https://b1messenger.esdlyon.dev/api/responses/${itemId}/new`, params)
+        .then(res => res.json())
+        .then(data => {
+            return data
+        })
+}
+
+
 async function privatePhoto(imageFile){
 
         const formData = new FormData();
