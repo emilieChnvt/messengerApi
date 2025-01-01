@@ -360,13 +360,15 @@ console.log(message)
         const authorOfMessage = document.createElement("span");
         authorOfMessage.classList.add("authorOfMessage");
         authorOfMessage.textContent = message.author.username ;
+
+        const  reactions = reactionDiv(message)
+        contentContainer.appendChild(reactions)
+
         messagesDiv.appendChild(authorOfMessage)
 
     }
 
-    const  reactions = reactionDiv(message)
 
-    contentContainer.appendChild(reactions)
 
     messagesDiv.appendChild(contentContainer);
     aMessage.appendChild(photoProfil);
