@@ -536,23 +536,27 @@ const addImageToChat=(imageUrl)=>{
     messageElement.appendChild(imageElement);
    allMessagesContainer.appendChild(messageElement);
 }
-document.querySelector(".sendImageButton").addEventListener("click", () => {
-    const imageInput = document.querySelector(".imageUpload");
-    const imageFile = imageInput.files[0];  // Récupère le fichier image sélectionné par l'utilisateur
-console.log(imageFile)
-    if (imageFile) {
-        privatePhoto(imageFile).then((imageId)=>{
+document.querySelectorAll(".sendImageButton").forEach((el)=>{
+    el.addEventListener("click", () => {
 
-            sendMessageWithImage(imageId,'hicds').then((res)=> {
-                const imageUrl = res.imageUrl || res.imageUrl;
-                addImageToChat(imageUrl)
+        const imageInput = document.querySelector(".imageUpload");
+        const imageFile = imageInput.files[0];  // Récupère le fichier image sélectionné par l'utilisateur
 
-            })
 
-        });
-    } else {
-        alert("Veuillez sélectionner une image avant d'envoyer.");
-    }
+
+            privatePhoto(imageFile).then((imageId)=>{
+                console.log(imageId)
+
+                sendMessageWithImage(imageId,'hicds').then((res)=> {
+                    const imageUrl = res.imageUrl || res.imageUrl;
+                    addImageToChat(imageUrl)
+
+
+                })
+
+            });
+})
+
 });
 
 if(!token){
@@ -760,8 +764,8 @@ async function privatePhoto(imageFile){
     return await fetch('https://b1messenger.esdlyon.dev/api/private/image', params)
     .then(res => res.json())
     .then(data => {
-        console.log(data.imageId)
-        return data.imageId
+        console.log(data)
+        return data
     })
 }
 async function sendMessageWithImage(imageId, content){
@@ -778,7 +782,7 @@ async function sendMessageWithImage(imageId, content){
             associatedImages:[imageId]
         })
     }
-    return await fetch('https://b1messenger.esdlyon.dev/api/private/message/new', params)
+    return await fetch('https://b1messenger.esdlyon.dev/api/message/new', params)
         .then(res => res.json())
         .then(data => {
 
