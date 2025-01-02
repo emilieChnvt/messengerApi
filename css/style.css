@@ -9,6 +9,15 @@
 .btnSelected{
     background-color: rgba(166, 166, 166, 0.73);
 }
+.fixed-nav{
+    position: fixed;
+    top: 50px;
+    left: 0;
+    width: 100%;
+    padding-left:20px;
+    padding-right:20px;
+    z-index: 1000;
+}
 .hidden{
     display: none;
  }
@@ -21,7 +30,7 @@
 }
 .allMessages, .allMessagesPrives{
     padding-bottom: 60px;
-    overflow-y:auto; // pour défiler si besoin
+    overflow-y:scroll; // pour défiler si besoin
 }
 .inputsLogin {
     display: flex;

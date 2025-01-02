@@ -89,7 +89,7 @@ const whoAmIDiv = () => {
                                  <img src=${res.imageUrl} alt="imgProfile" class=" photoProfil rounded-circle" >
                                 
                             </div>`
-        nav.innerHTML = profil;
+        nav.innerHTML += profil;
     })
 }
 const chooseBtnConv = ()=> {
@@ -171,9 +171,13 @@ const displayMessagesPrive = (itemId) =>{
     allMessagesPrives.innerHTML = "";  // Réinitialise la liste des messages privés
 
     getConvPrive(itemId).then((res)=>{
-            res.privateMessages.forEach((msg)=>{
+        const author = res.with.username;
+        const authorElement = document.querySelector(".authorName")
+        authorElement.classList.add("visible");
+        authorElement.innerHTML = author;
+        res.privateMessages.forEach((msg)=>{
                 addMessageToChat(msg, 'private')
-            })
+        })
         addMessagePrive(itemId)
         const messages= document.querySelectorAll(".allMessagesPrives .aMessage .messagesDiv");
             messages.forEach((message)=>{
@@ -264,7 +268,8 @@ const toogleBtnToShowConv = () => {
         displayConv()
     })
 }
-const displayConv=()=>{
+const displayConv=(getMessagesData)=>{
+    console.log(getMessagesData)
     discussionsGroupePage.classList.add("hidden");
     discussionsGroupePage.classList.remove("visible");
     displayArrowToGoBack()
@@ -292,6 +297,10 @@ const goBack = () => {
 
     chatPrive.classList.add("hidden");
     chatPrive.classList.remove("visible");
+
+    const authorName = document.querySelector(".authorName");
+    authorName.classList.add("hidden");
+    authorName.classList.remove("visible");
     removeArrowToGoBack()
 }
 const displayMessages = () => {
@@ -307,7 +316,6 @@ const displayMessages = () => {
         chat.classList.remove("hidden");
         chat.classList.add("visible");
         res.forEach(msg => {
-            console.log(msg)
             addMessageToChat(msg, 'group')
         })
     })
