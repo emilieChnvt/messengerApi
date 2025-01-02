@@ -36,7 +36,17 @@
 }
 .toSignUp, .toSignIn {
     text-decoration: underline;
+    color: #FFA72D;
 
+}
+.submit, .submitAccount{
+    border-radius: 50px;
+    background: linear-gradient(90deg, #FFF 0%, #FFC16B 43%, #FFA72D 100%);
+    border: 1px #FFA72D;
+}
+.blob{
+    z-index:-1;
+    pointer-events: none;
 }
 .photoProfil{
     width: 20px;
@@ -79,7 +89,7 @@
     justify-content: center;
     flex-direction: column;
     border:1px solid black;
-    padding: 5px 20px;
+    padding: 15px 20px;
     border-radius: 50px;
     box-shadow: 0px 2px 5px rgba(0,0,0,0.1);
     width: fit-content;
