@@ -1,4 +1,11 @@
-
+.primaryColor{
+    background-color: #FFA72D;
+    color: white;
+    border:none
+}
+.borderOrange{
+    border-color: #FFA72D;
+}
 .btnSelected{
     background-color: rgba(166, 166, 166, 0.73);
 }
@@ -97,8 +104,45 @@
     color: white;
     border:none;
 }
+.messageContent{
+    font-size: 20px;
+}
 .authorOfMessage{
     font-size:10px
+}
+.responseButton{
+    position: absolute;
+    bottom: -5px;
+    right: -5px;
+}
+.responseContainer{
+    margin-top:20px;
+    padding-left:15px;
+    border-left: 2px solid #e9e9e9;
+
+}
+.responseAuthor{
+    font-weight: bold;
+    color: #333;
+    text-align:right;
+
+}
+.responseContent{
+    font-size:14px;
+    color: #555;
+}
+.eachResponse{
+    background-color: #e9e9e9;
+    padding: 5px;
+    border-radius: 5px;
+    margin: 5px 0;
+    display: flex;
+    flex-direction: column;
+}
+.responseButton{
+    background-color: transparent;
+    cursor: pointer;
+    border: none;
 }
 
 

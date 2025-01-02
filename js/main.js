@@ -307,14 +307,13 @@ const displayMessages = () => {
         chat.classList.remove("hidden");
         chat.classList.add("visible");
         res.forEach(msg => {
+            console.log(msg)
             addMessageToChat(msg, 'group')
         })
     })
-
-
-
     displayInputMessage()
 }
+
 const displayInputMessage = (messageId, reactionType) => {
 
     const btnMessage = document.querySelector(".btnMessage");
@@ -356,7 +355,6 @@ const addMessageToChat = (message, type) => {
     const messagesDiv = document.createElement("div");
     messagesDiv.classList.add("messagesDiv");
 
-console.log(message)
     const contentContainer = document.createElement("div");
     contentContainer.classList.add("contentContainer");
 
@@ -365,6 +363,7 @@ console.log(message)
     messageContent.textContent = message.content ;
 
     contentContainer.appendChild(messageContent);
+    messagesDiv.appendChild(contentContainer);
 
     const photoProfil = document.createElement("img");
     photoProfil.classList.add("photoProfil");
@@ -401,22 +400,50 @@ console.log(message)
         const  reactions = reactionDiv(message)
         contentContainer.appendChild(reactions);
 
-        const responseButton = document.createElement("button");
-        responseButton.textContent = "Répondre";
-        responseButton.classList.add("responseButton");
+        const responseContainer = document.createElement("div");
+        if(message.responses && message.responses.length>0){
+            console.log(message.responses);
+            message.responses.forEach(msg => {
+                const eachResponse= document.createElement('div');
+                eachResponse.classList.add("eachResponse");
 
+                //auteur
+                const responseAuthor = document.createElement("span");
+                responseAuthor.classList.add("responseAuthor");
+                responseAuthor.textContent = msg.author.username;
+
+                //contenu
+                const responseContent = document.createElement("span");
+                responseContent.classList.add("responseContent");
+                responseContent.textContent = msg.content;
+
+                eachResponse.appendChild(responseAuthor);
+                eachResponse.appendChild(responseContent);
+                responseContainer.appendChild(eachResponse);
+            })
+        }
+
+        const responseButton = document.createElement("button");
+        responseButton.innerHTML = `<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 512 512" style="width:15px; height:15px"><!--!Font Awesome Free 6.7.2 by @fontawesome - https://fontawesome.com License - https://fontawesome.com/license/free Copyright 2025 Fonticons, Inc.--><path d="M205 34.8c11.5 5.1 19 16.6 19 29.2l0 64 112 0c97.2 0 176 78.8 176 176c0 113.3-81.5 163.9-100.2 174.1c-2.5 1.4-5.3 1.9-8.1 1.9c-10.9 0-19.7-8.9-19.7-19.7c0-7.5 4.3-14.4 9.8-19.5c9.4-8.8 22.2-26.4 22.2-56.7c0-53-43-96-96-96l-96 0 0 64c0 12.6-7.4 24.1-19 29.2s-25 3-34.4-5.4l-160-144C3.9 225.7 0 217.1 0 208s3.9-17.7 10.6-23.8l160-144c9.4-8.5 22.9-10.6 34.4-5.4z"/></svg>`;
+
+        responseButton.classList.add("responseButton");
         responseButton.addEventListener("click", ()=>toggleMessageToAddResponse(message));
 
+
         messagesDiv.appendChild(authorOfMessage)
+        messagesDiv.appendChild(contentContainer);
+
         messagesDiv.appendChild(responseButton)
+        messagesDiv.appendChild(responseContainer)
 
     }
 
 
 
-    messagesDiv.appendChild(contentContainer);
+
     aMessage.appendChild(photoProfil);
     aMessage.appendChild(messagesDiv);
+
 
     allMessagesContainer.appendChild(aMessage);
 
@@ -424,7 +451,7 @@ console.log(message)
     allMessagesContainer.scrollTop = allMessagesContainer.scrollHeight;
 
 }
-const toggleMessageToAddResponse = (message) => {
+const toggleMessageToAddResponse = (message ) => {
     const responseDiv = document.createElement("div");
     responseDiv.classList.add("responseDiv");
     responseDiv.setAttribute("data-message-id", message.id);
@@ -436,11 +463,14 @@ const toggleMessageToAddResponse = (message) => {
     sendResponse.classList.add("sendResponse");
     sendResponse.textContent = "envoyer";
 
+
     sendResponse.addEventListener("click", ()=>{
         const content = responseInput.value
         response(message.id, content).then((res)=>{
             console.log(res);
             displayResponse(message.id, res, content);
+            responseInput.remove()
+            sendResponse.remove();
         })
 
     })
@@ -451,22 +481,28 @@ const toggleMessageToAddResponse = (message) => {
     messageDiv.appendChild(responseDiv);
 
 }
-const displayResponse=(messageId, replyData, content)=>{
 
-    const messageDiv = document.querySelector(`.messagesDiv[data-message-id="${messageId}"]`);
-
-
-    const replyDiv = document.createElement("div");
-    replyDiv.classList.add("replyDiv");
+const displayResponse=(messageId, responseData, content)=>{// response(message.id, content)
 
 
+    const responseContainer = document.querySelector(".responseContainer");
+
+    const eachResponse= document.createElement('div');
+    eachResponse.classList.add("eachResponse");
+
+    //auteur
+    const responseAuthor = document.createElement("span");
+    responseAuthor.classList.add("responseAuthor");
+    responseAuthor.textContent = responseData.author.username;
+
+    //contenu
     const responseContent = document.createElement("span");
     responseContent.classList.add("responseContent");
-    responseContent.textContent = content ;
+    responseContent.textContent = responseData.content;
 
-    replyDiv.appendChild(responseContent);
-
-    messageDiv.appendChild(replyDiv);
+    eachResponse.appendChild(responseAuthor);
+    eachResponse.appendChild(responseContent);
+    responseContainer.appendChild(eachResponse);
 
 }
 
@@ -798,7 +834,7 @@ async function updateMessage(messageId, newContent){
         return data
     })
 }
-async function response(itemId, content){
+async function response(itemId, content, data){
     let params ={
         method: "POST",
         headers: {
