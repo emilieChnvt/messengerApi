@@ -437,9 +437,10 @@ const toggleMessageToAddResponse = (message) => {
     sendResponse.textContent = "envoyer";
 
     sendResponse.addEventListener("click", ()=>{
-        response(message.id, responseInput.value).then((res)=>{
+        const content = responseInput.value
+        response(message.id, content).then((res)=>{
             console.log(res);
-            displayResponse()
+            displayResponse(message.id, res, content);
         })
 
     })
@@ -450,20 +451,19 @@ const toggleMessageToAddResponse = (message) => {
     messageDiv.appendChild(responseDiv);
 
 }
-const displayResponse=(messageId, replyData)=>{
+const displayResponse=(messageId, replyData, content)=>{
+
     const messageDiv = document.querySelector(`.messagesDiv[data-message-id="${messageId}"]`);
+
 
     const replyDiv = document.createElement("div");
     replyDiv.classList.add("replyDiv");
 
-    const author = document.createElement("span");
-    author.classList.add("authorDiv");
-    author.innerHTML = `${replyData.author.username}`;
+
     const responseContent = document.createElement("span");
     responseContent.classList.add("responseContent");
-    responseContent.textContent = replyData.content ;
+    responseContent.textContent = content ;
 
-    replyDiv.appendChild(author);
     replyDiv.appendChild(responseContent);
 
     messageDiv.appendChild(replyDiv);
@@ -812,6 +812,7 @@ async function response(itemId, content){
     return await fetch(`https://b1messenger.esdlyon.dev/api/responses/${itemId}/new`, params)
         .then(res => res.json())
         .then(data => {
+            console.log(data)
             return data
         })
 }
