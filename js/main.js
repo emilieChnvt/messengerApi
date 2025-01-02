@@ -300,7 +300,7 @@ const goBack = () => {
 
     const authorName = document.querySelector(".authorName");
     authorName.classList.add("hidden");
-    authorName.classList.remove("visible");
+
     removeArrowToGoBack()
 }
 const displayMessages = () => {
