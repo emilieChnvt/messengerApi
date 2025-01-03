@@ -215,6 +215,11 @@ const addMessagePrive = (itemId) => {
     btnMessagePrive.removeEventListener("click", handleSendMessage)
     btnMessagePrive.addEventListener("click", ()=>{handleSendMessage(itemId)})
 }
+
+
+
+
+
 const handleSendMessage = () => {
     console.log('conversation', conversations)
     const inputMessagePrive = document.querySelector(".inputMessagePrive");
