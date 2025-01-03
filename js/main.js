@@ -488,7 +488,7 @@ const toggleMessageToAddResponse = (message ) => {
     responseDiv.classList.add("responseDiv");
     responseDiv.setAttribute("data-message-id", message.id);
 
-    const responseInput = document.createElement("textarea");
+    const responseInput = document.createElement("input");
     responseInput.classList.add("responseInput");
 
     const sendResponse=document.createElement("button");
@@ -499,7 +499,6 @@ const toggleMessageToAddResponse = (message ) => {
     sendResponse.addEventListener("click", ()=>{
         const content = responseInput.value
         response(message.id, content).then((res)=>{
-            console.log(res);
             displayResponse(message.id, res, content);
             responseInput.remove()
             sendResponse.remove();
@@ -514,26 +513,33 @@ const toggleMessageToAddResponse = (message ) => {
 
 }
 
-const displayResponse=(messageId, responseData, content)=>{// response(message.id, content)
-
+const displayResponse=( messageId, content )=>{// response(message.id, content)
+    const messageDiv = document.querySelector(`.messagesDiv[data-message-id="${messageId}"]`);
 
     const responseContainer = document.querySelector(".responseContainer");
 
+    if(!responseContainer){
+        responseContainer = document.createElement("div");
+        responseContainer.classList.add("responseContainer");
+        messageDiv.appendChild(responseContainer);
+    }
     const eachResponse= document.createElement('div');
     eachResponse.classList.add("eachResponse");
+
 
     //auteur
     const responseAuthor = document.createElement("span");
     responseAuthor.classList.add("responseAuthor");
-    responseAuthor.textContent = responseData.author.username;
+    responseAuthor.innerHTML = "emiliech";
 
     //contenu
     const responseContent = document.createElement("span");
     responseContent.classList.add("responseContent");
-    responseContent.textContent = responseData.content;
+    responseContent.innerHTML = content;
 
     eachResponse.appendChild(responseAuthor);
     eachResponse.appendChild(responseContent);
+
     responseContainer.appendChild(eachResponse);
 
 }
