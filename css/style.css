@@ -163,5 +163,13 @@
     cursor: pointer;
     border: none;
 }
+.grp, .grpPrive{
+    cursor: pointer;
+    transform: scale(1.2);
+}
+.btnGroupe:hover, .btnPrive:hover{
+    background-color: #FFA72D;
+    color: white;
+}
 
 
