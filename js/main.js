@@ -497,7 +497,9 @@ const toggleMessageToAddResponse = (message ) => {
 
 
     sendResponse.addEventListener("click", ()=>{
-        const content = responseInput.value
+        const content = responseInput.value;
+        console.log("Contenu envoyé :", content);  // Vérifie la valeur de content
+
         response(message.id, content).then((res)=>{
             displayResponse(message.id, res, content);
             responseInput.remove()
@@ -513,10 +515,10 @@ const toggleMessageToAddResponse = (message ) => {
 
 }
 
-const displayResponse=( messageId, content )=>{// response(message.id, content)
+const displayResponse=( messageId, responseData )=>{// response(message.id, content)
     const messageDiv = document.querySelector(`.messagesDiv[data-message-id="${messageId}"]`);
 
-    const responseContainer = document.querySelector(".responseContainer");
+    let responseContainer = document.querySelector(".responseContainer");
 
     if(!responseContainer){
         responseContainer = document.createElement("div");
@@ -535,7 +537,7 @@ const displayResponse=( messageId, content )=>{// response(message.id, content)
     //contenu
     const responseContent = document.createElement("span");
     responseContent.classList.add("responseContent");
-    responseContent.innerHTML = content;
+    responseContent.textContent = responseData.content;
 
     eachResponse.appendChild(responseAuthor);
     eachResponse.appendChild(responseContent);
@@ -872,7 +874,7 @@ async function updateMessage(messageId, newContent){
         return data
     })
 }
-async function response(itemId, content, data){
+async function response(itemId, content){
     let params ={
         method: "POST",
         headers: {
