@@ -9,7 +9,8 @@ const grp = document.querySelector(".grp");
 const inputMessage = document.querySelector(".inputMessage");
 const chatPrive = document.querySelector(".chatPrive");
 
-
+let currentId = null;
+let conversations = [];
 
 let token = null;
 const toSignUp = document.querySelector(".toSignUp");
@@ -127,8 +128,10 @@ const displayChatConvPrive = ()=>{
     allConv.innerHTML = "";
 
     convsPrive().then((res)=>{
+        conversations = res
+
         res.forEach((item)=>{
-            console.log(item);
+
             let conv = `<div class="grpPrive d-flex align-items-center justify-content-between border rounded-3 px-3 py-1" id="${item.id}">
                                     <div class=" d-flex align-items-center justify-content-center">
                                         <div class="nameGroupe rounded-circle photoProfil border border-1 me-3"></div>
@@ -139,9 +142,10 @@ const displayChatConvPrive = ()=>{
                                </div>`
 
             allConv.innerHTML += conv
-            toogleBtnToShowConvPrive()
+
 
         })
+        toogleBtnToShowConvPrive()
     })
     removeArrowToGoBack()
 
@@ -158,23 +162,38 @@ const toogleBtnToShowConvPrive = () => {
     })
 }
 const displayConvPrive = (itemId) =>{
-    discussionsPrivePage.classList.add("hidden");
-    discussionsPrivePage.classList.remove("visible");
+    currentId = itemId //id conv
 
-    chatPrive.classList.add("visble");
-    chatPrive.classList.remove("hidden");
-    displayArrowToGoBack()
-    displayMessagesPrive(itemId)
+    const currentConv = conversations.find(conv =>conv.id === +itemId); //+ pour convertir en nombre (c'était une string)
+    console.log(currentConv);
+    const recipientId = currentConv.with.id; // id utilisateur
+
+    if(recipientId){
+        discussionsPrivePage.classList.add("hidden");
+        discussionsPrivePage.classList.remove("visible");
+
+        chatPrive.classList.add("visible");
+        chatPrive.classList.remove("hidden");
+        displayArrowToGoBack()
+        displayMessagesPrive(itemId)
+
+
+    }
+
+
 }
 const displayMessagesPrive = (itemId) =>{
     const allMessagesPrives = document.querySelector(".allMessagesPrives");
     allMessagesPrives.innerHTML = "";  // Réinitialise la liste des messages privés
+    currentId = itemId
 
     getConvPrive(itemId).then((res)=>{
+        conversations = res
             res.privateMessages.forEach((msg)=>{
                 addMessageToChat(msg, 'private')
             })
         addMessagePrive(itemId)
+
         const messages= document.querySelectorAll(".allMessagesPrives .aMessage .messagesDiv");
             messages.forEach((message)=>{
                 const messageId = message.getAttribute("data-message-id");
@@ -191,21 +210,32 @@ const displayMessagesPrive = (itemId) =>{
 
 }
 const addMessagePrive = (itemId) => {
-    const inputMessagePrive = document.querySelector(".inputMessagePrive");
     const btnMessagePrive = document.querySelector(".btnMessagePrive");
-    btnMessagePrive.addEventListener("click", ()=>{
-        newPrivateMessage(inputMessagePrive.value, itemId).then((res)=>{
-           addMessageToChat(
-               {
-                   content:inputMessagePrive.value,
-                   author: { username: "emiliech"},
-               },
-               "private"
-           );
 
-           inputMessagePrive.value = "";
+    btnMessagePrive.removeEventListener("click", handleSendMessage)
+    btnMessagePrive.addEventListener("click", ()=>{handleSendMessage(itemId)})
+}
+const handleSendMessage = () => {
+    console.log('conversation', conversations)
+    const inputMessagePrive = document.querySelector(".inputMessagePrive");
+
+    console.log('currentconv', conversations);
+    const recipientId = conversations.with.id; // id utilisateur
+
+
+        newPrivateMessage(inputMessagePrive.value, recipientId).then((res)=>{
+            console.log(res);
+            addMessageToChat(
+                {
+                    content:inputMessagePrive.value,
+                    author: { username: "emiliech"},
+                },
+                "private"
+            );
+
+            inputMessagePrive.value = "";
         })
-    })
+
 }
 const addReactionMessage = (messageId, reactionType) => {
     console.log("Message ID:", messageId);  // Debugging: Check messageId
@@ -784,7 +814,7 @@ async function getConvPrive(itemId){
             return data
         })
 }
-async function newPrivateMessage(inputMessagePrive, itemId){
+async function newPrivateMessage(inputMessagePrive, userId){
     let params ={
         method: "POST",
         headers: {
@@ -795,7 +825,7 @@ async function newPrivateMessage(inputMessagePrive, itemId){
             content: inputMessagePrive
         })
     }
-    return await fetch(`https://b1messenger.esdlyon.dev/api/private/message/${itemId}`, params)
+    return await fetch(`https://b1messenger.esdlyon.dev/api/private/message/${userId}`, params)
         .then(res => res.json())
         .then(data => {
             console.log(data)
