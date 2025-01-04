@@ -688,10 +688,18 @@ document.querySelectorAll(".sendImageButton").forEach((el)=>{
 
 });
 
+const refreshAutomatic =()=>{
+    setInterval(()=>{
+        console.log("Refreshing automatic...");
+        refresh();
+    }, 30 * 1000); //toutes les 57 minutes
+}
+
 if(!token){
-    displayLoginForm()
+    displayLoginForm();
 }else{
-    displayHomeChat()
+    displayHomeChat();
+    refreshAutomatic();
 }
 
 async function register(username, password){
@@ -727,6 +735,8 @@ async function getToken(username, password) {
         .then(data => {
             console.log(data)
             token = data.token;
+            freshener = data.freshener;
+            refreshAutomatic();
             return data
         })
 }
@@ -957,4 +967,3 @@ async function refresh(){
         })
 
 }
-refresh()
