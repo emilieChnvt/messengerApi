@@ -13,6 +13,7 @@ let currentId = null;
 let conversations = [];
 
 let token = null;
+let freshener = null
 const toSignUp = document.querySelector(".toSignUp");
 const toSignIn = document.querySelector(".toSignIn");
 const loginPage = document.querySelector(".login");
@@ -476,9 +477,6 @@ const addMessageToChat = (message, type) => {
     }
     messagesDiv.appendChild(responseContainer)
 
-
-
-
     aMessage.appendChild(photoProfil);
     aMessage.appendChild(messagesDiv);
 
@@ -940,3 +938,23 @@ async function sendMessageWithImage(imageId, content){
             return data
         })
 }
+
+async function refresh(){
+    let params={
+        method: "POST",
+        headers: {
+            "Content-Type": "application/json",
+        },
+        body: JSON.stringify({ freshener})
+    }
+    return await fetch('https://b1messenger.esdlyon.dev/refreshthistoken',params)
+        .then(res => res.json())
+        .then(data => {
+            console.log(data)
+            token = data.token;
+            freshener = data.freshener;
+            return data
+        })
+
+}
+refresh()
