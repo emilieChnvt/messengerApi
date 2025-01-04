@@ -692,7 +692,7 @@ const refreshAutomatic =()=>{
     setInterval(()=>{
         console.log("Refreshing automatic...");
         refresh();
-    }, 30 * 1000); //toutes les 57 minutes
+    }, 57 * 60 * 1000); //toutes les 57 minutes
 }
 
 if(!token){
