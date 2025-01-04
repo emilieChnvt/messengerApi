@@ -445,7 +445,7 @@ const addProfileImg=(message, messagesDiv)=>{
     }
     return photoProfil;
 }
-const  authorAction = (message, messagesDiv)=>{
+const authorAction = (message, messagesDiv)=>{
     if (message.author.username === "emiliech") {
         messagesDiv.classList.add("marg");
         messagesDiv.classList.add("messagesDivByMe");
@@ -610,6 +610,7 @@ const editMessage = (message, messageId, ) => {
 
 }
 const reactionDiv = (message)=> {
+    console.log(message)
     const reactionContainer = document.createElement("div");
     reactionContainer.classList.add("reactionContainer");
     reactionContainer.style.marginLeft = "10px";
@@ -623,33 +624,52 @@ const reactionDiv = (message)=> {
     const reactionMenu = document.createElement("div");
     reactionMenu.classList.add("reactionMenu");
 
-    const reactions = [
-        { type:"happy", emoji:"🙂"},
-        { type:"sadd", emoji:"😭"},
-        { type:"cryy", emoji:"😢"},
-        { type:"vomi", emoji:"🤢"},
-    ]
-   reactions.forEach(reaction => {
+    const reactions = ["happy", "sadd", "cryy", "vomi"]
+   reactions.forEach(type => {
        const reactionOption = document.createElement("span");
        reactionOption.classList.add("reactionOption");
-       reactionOption.setAttribute("data-reaction", reaction.type)
-       reactionOption.textContent = reaction.emoji;
+       reactionOption.setAttribute("data-reaction", type)
+       reactionOption.textContent = getEmojiForReaction(type);
        reactionMenu.appendChild(reactionOption);
    })
     reactionButton.addEventListener("click", ()=>{
-        reactionMenu.style.display = reactionMenu.style.display = "none" ? "block" : "none";
+        reactionMenu.style.display = reactionMenu.style.display === "none" ? "block" : "none";
     })
     reactionMenu.addEventListener("click", (e)=>{
         if(e.target.classList.contains("reactionOption")){
 
             const reactionType = e.target.getAttribute("data-reaction");
             addReactionMessage(message.id, reactionType)
-
             reactionMenu.style.display = "none";
-            console.log("Reaction Type:", reactionType);
-            console.log("Message ID:", message.id);
+
         }
     })
+    let reactionCount={};
+
+    if(message.reactions && message.reactions.length > 0){
+
+        message.reactions.forEach(reaction => {
+           const type = reaction.type;
+           if(reactionCount[type]){
+               reactionCount[type]+=1;
+           }else{
+               reactionCount[type]=1;
+           }
+        });
+        const reactionExisting = document.createElement("div");
+        reactionExisting.classList.add("reactionExisting");
+
+        reactions.forEach(type => {
+            if(reactionCount[type]>0){
+                const emoji = getEmojiForReaction(type);
+                const reactionSpan = document.createElement("span");
+                reactionSpan.classList.add("reactionCount");
+                reactionSpan.textContent = `${emoji} ${reactionCount[type]}`; //emoji + nb
+                reactionExisting.appendChild(reactionSpan);
+            }
+        })
+reactionContainer.appendChild(reactionExisting);
+    }
     reactionContainer.appendChild(reactionButton);
     reactionContainer.appendChild(reactionMenu);
 
