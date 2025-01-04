@@ -133,7 +133,7 @@ const displayChatConvPrive = ()=>{
 
         res.forEach((item)=>{
 
-            let conv = `<div class="grpPrive d-flex align-items-center justify-content-between border rounded-3 px-3 py-1" id="${item.id}">
+            let conv = `<div class="grpPrive d-flex align-items-center justify-content-between borderOrange rounded-3 px-3 py-1" id="${item.id}">
                                     <div class=" d-flex align-items-center justify-content-center">
                                         <div class="nameGroupe rounded-circle photoProfil border border-1 me-3"></div>
                                         <p class="pt-3 me-2">${item.with.username}</p>
@@ -453,28 +453,7 @@ const addMessageToChat = (message, type) => {
         messagesDiv.appendChild(responseButton)
 
     }
-    const responseContainer = document.createElement("div");
-    if(message.responses && message.responses.length>0){
-        console.log(message.responses);
-        message.responses.forEach(msg => {
-            const eachResponse= document.createElement('div');
-            eachResponse.classList.add("eachResponse");
-
-            //auteur
-            const responseAuthor = document.createElement("span");
-            responseAuthor.classList.add("responseAuthor");
-            responseAuthor.textContent = msg.author.username;
-
-            //contenu
-            const responseContent = document.createElement("span");
-            responseContent.classList.add("responseContent");
-            responseContent.textContent = msg.content;
-
-            eachResponse.appendChild(responseAuthor);
-            eachResponse.appendChild(responseContent);
-            responseContainer.appendChild(eachResponse);
-        })
-    }
+    const responseContainer = createResponseContainer(message)
     messagesDiv.appendChild(responseContainer)
 
     aMessage.appendChild(photoProfil);
@@ -548,6 +527,32 @@ const displayResponse=( messageId, responseData )=>{// response(message.id, cont
 
     responseContainer.appendChild(eachResponse);
 
+}
+const createResponseContainer=()=>{
+    const responseContainer = document.createElement("div");
+
+    if(message.responses && message.responses.length>0){
+        console.log(message.responses);
+        message.responses.forEach(msg => {
+            const eachResponse= document.createElement('div');
+            eachResponse.classList.add("eachResponse");
+
+            //auteur
+            const responseAuthor = document.createElement("span");
+            responseAuthor.classList.add("responseAuthor");
+            responseAuthor.textContent = msg.author.username;
+
+            //contenu
+            const responseContent = document.createElement("span");
+            responseContent.classList.add("responseContent");
+            responseContent.textContent = msg.content;
+
+            eachResponse.appendChild(responseAuthor);
+            eachResponse.appendChild(responseContent);
+            responseContainer.appendChild(eachResponse);
+        })
+    }
+    return responseContainer;
 }
 
 const penToEdit=(message)=>{

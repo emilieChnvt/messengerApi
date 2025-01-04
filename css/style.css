@@ -4,7 +4,8 @@
     border:none
 }
 .borderOrange{
-    border-color: #FFA72D;
+    border: 1px solid #FFA72D;
+
 }
 .btnSelected{
     background-color: rgba(166, 166, 166, 0.73);
