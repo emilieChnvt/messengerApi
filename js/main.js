@@ -380,7 +380,7 @@ const displayInputMessage = (messageId, reactionType) => {
     })
 }
 const addMessageToChat = (message, type) => {
-    let allMessagesContainer = (type === 'group') ? document.querySelector('.allMessages'): document.querySelector('.allMessagesPrivées')
+    let allMessagesContainer = (type === 'group') ? document.querySelector('.allMessages'): document.querySelector('.allMessagesPrives')
 
     const {aMessage, messagesDiv, contentContainer, messageContent} = createMessageContainer(message)
     const photoProfil = addProfileImg(message, messagesDiv);
@@ -494,14 +494,13 @@ const createResponse=(msg)=>{
 
     const responseContent = document.createElement("span");
     responseContent.classList.add("responseContent");
-    responseAuthor.textContent = msg.content;
+    responseContent.textContent = msg.content;
 
     eachResponse.appendChild(responseAuthor);
     eachResponse.appendChild(responseContent);
 
     return eachResponse;
 }
-
 
 
 const toggleMessageToAddResponse = (message ) => {
