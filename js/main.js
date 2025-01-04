@@ -380,13 +380,42 @@ const displayInputMessage = (messageId, reactionType) => {
     })
 }
 const addMessageToChat = (message, type) => {
-    let allMessagesContainer;
+    let allMessagesContainer = (type === 'group') ? document.querySelector('.allMessages'): document.querySelector('.allMessagesPrivées')
 
-    if (type === 'group') {
-        allMessagesContainer = document.querySelector(".allMessages");
-    } else if (type === 'private') {
-        allMessagesContainer = document.querySelector(".allMessagesPrives");
+    const {aMessage, messagesDiv, contentContainer, messageContent} = createMessageContainer(message)
+    const photoProfil = addProfileImg(message, messagesDiv);
+
+    authorAction(message, messagesDiv);
+    addMessageId(message, messagesDiv);
+    addReactions(message, contentContainer);
+
+    const responseButton = createResponseButton(message);
+    messagesDiv.appendChild(responseButton)
+
+    const responseContainer= createResponseContainer(message)
+    messagesDiv.appendChild(responseContainer)
+
+
+    aMessage.appendChild(photoProfil);
+    aMessage.appendChild(messagesDiv);
+    allMessagesContainer.appendChild(aMessage);
+
+    //faire défiler pr voir new message
+    allMessagesContainer.scrollTop = allMessagesContainer.scrollHeight;
+
+}
+const addMessageId=(message, messagesDiv)=>{
+    if (message.id) {
+        messagesDiv.setAttribute("data-message-id", message.id);
+        console.log("Private Message ID:", message.id);
     }
+}
+const addReactions=(message, contentContainer)=>{
+    const  reactions = reactionDiv(message)
+    contentContainer.appendChild(reactions);
+
+}
+const createMessageContainer=(message)=>{
     const aMessage = document.createElement("div");
     aMessage.classList.add("aMessage");
 
@@ -403,6 +432,9 @@ const addMessageToChat = (message, type) => {
     contentContainer.appendChild(messageContent);
     messagesDiv.appendChild(contentContainer);
 
+    return { aMessage, messagesDiv, contentContainer, messageContent }; // pour retourner plusierus choses
+}
+const addProfileImg=(message, messagesDiv)=>{
     const photoProfil = document.createElement("img");
     photoProfil.classList.add("photoProfil");
 
@@ -411,12 +443,9 @@ const addMessageToChat = (message, type) => {
         const imageUrl = `https://example.com/uploads/${message.author.image.imageName}`;
         photoProfil.src = `url(${imageUrl})`;
     }
-
-    if (message.id) {
-        messagesDiv.setAttribute("data-message-id", message.id);
-        console.log("Private Message ID:", message.id);
-    }
-
+    return photoProfil;
+}
+const  authorAction = (message, messagesDiv)=>{
     if (message.author.username === "emiliech") {
         messagesDiv.classList.add("marg");
         messagesDiv.classList.add("messagesDivByMe");
@@ -428,44 +457,53 @@ const addMessageToChat = (message, type) => {
         const pen = penToEdit(message)
         messagesDiv.prepend(pen);
     } else {
-        messageContent.style.textAlign = "left";
-        messagesDiv.style.justifyContent = "flex-start"
-
         const authorOfMessage = document.createElement("span");
         authorOfMessage.classList.add("authorOfMessage");
-        authorOfMessage.textContent = message.author.username ;
-
-        const  reactions = reactionDiv(message)
-        contentContainer.appendChild(reactions);
-
-
-
-        const responseButton = document.createElement("button");
-        responseButton.innerHTML = `<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 512 512" style="width:15px; height:15px"><!--!Font Awesome Free 6.7.2 by @fontawesome - https://fontawesome.com License - https://fontawesome.com/license/free Copyright 2025 Fonticons, Inc.--><path d="M205 34.8c11.5 5.1 19 16.6 19 29.2l0 64 112 0c97.2 0 176 78.8 176 176c0 113.3-81.5 163.9-100.2 174.1c-2.5 1.4-5.3 1.9-8.1 1.9c-10.9 0-19.7-8.9-19.7-19.7c0-7.5 4.3-14.4 9.8-19.5c9.4-8.8 22.2-26.4 22.2-56.7c0-53-43-96-96-96l-96 0 0 64c0 12.6-7.4 24.1-19 29.2s-25 3-34.4-5.4l-160-144C3.9 225.7 0 217.1 0 208s3.9-17.7 10.6-23.8l160-144c9.4-8.5 22.9-10.6 34.4-5.4z"/></svg>`;
-
-        responseButton.classList.add("responseButton");
-        responseButton.addEventListener("click", ()=>toggleMessageToAddResponse(message));
-
-
-        messagesDiv.appendChild(authorOfMessage)
-        messagesDiv.appendChild(contentContainer);
-
-        messagesDiv.appendChild(responseButton)
+        authorOfMessage.textContent = message.author.username;
+        messagesDiv.appendChild(authorOfMessage);
+        messagesDiv.style.justifyContent = "flex-start"
 
     }
-    const responseContainer = createResponseContainer(message)
-    messagesDiv.appendChild(responseContainer)
-
-    aMessage.appendChild(photoProfil);
-    aMessage.appendChild(messagesDiv);
-
-
-    allMessagesContainer.appendChild(aMessage);
-
-    //faire défiler pr voir new message
-    allMessagesContainer.scrollTop = allMessagesContainer.scrollHeight;
-
 }
+const createResponseButton=(message)=>{
+    const responseButton = document.createElement("button");
+    responseButton.innerHTML = `<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 512 512" style="width:15px; height:15px"><!--!Font Awesome Free 6.7.2 by @fontawesome - https://fontawesome.com License - https://fontawesome.com/license/free Copyright 2025 Fonticons, Inc.--><path d="M205 34.8c11.5 5.1 19 16.6 19 29.2l0 64 112 0c97.2 0 176 78.8 176 176c0 113.3-81.5 163.9-100.2 174.1c-2.5 1.4-5.3 1.9-8.1 1.9c-10.9 0-19.7-8.9-19.7-19.7c0-7.5 4.3-14.4 9.8-19.5c9.4-8.8 22.2-26.4 22.2-56.7c0-53-43-96-96-96l-96 0 0 64c0 12.6-7.4 24.1-19 29.2s-25 3-34.4-5.4l-160-144C3.9 225.7 0 217.1 0 208s3.9-17.7 10.6-23.8l160-144c9.4-8.5 22.9-10.6 34.4-5.4z"/></svg>`;
+
+    responseButton.classList.add("responseButton");
+    responseButton.addEventListener("click", ()=>toggleMessageToAddResponse(message));
+
+    return responseButton
+}
+const createResponseContainer=(message)=>{
+    const responseContainer = document.createElement("div");
+    if(message.responses &&message.responses.length > 0){
+        message.responses.forEach(response=>{
+            const eachResponse = createResponse(response);
+            responseContainer.appendChild(eachResponse);
+        })
+    }
+    return responseContainer;
+}
+const createResponse=(msg)=>{
+    const eachResponse = document.createElement("div");
+    eachResponse.classList.add("eachResponse");
+
+    const responseAuthor = document.createElement("span");
+    responseAuthor.classList.add("responseAuthor");
+    responseAuthor.textContent = msg.author.username;
+
+    const responseContent = document.createElement("span");
+    responseContent.classList.add("responseContent");
+    responseAuthor.textContent = msg.content;
+
+    eachResponse.appendChild(responseAuthor);
+    eachResponse.appendChild(responseContent);
+
+    return eachResponse;
+}
+
+
+
 const toggleMessageToAddResponse = (message ) => {
     const responseDiv = document.createElement("div");
     responseDiv.classList.add("responseDiv");
@@ -528,32 +566,7 @@ const displayResponse=( messageId, responseData )=>{// response(message.id, cont
     responseContainer.appendChild(eachResponse);
 
 }
-const createResponseContainer=()=>{
-    const responseContainer = document.createElement("div");
 
-    if(message.responses && message.responses.length>0){
-        console.log(message.responses);
-        message.responses.forEach(msg => {
-            const eachResponse= document.createElement('div');
-            eachResponse.classList.add("eachResponse");
-
-            //auteur
-            const responseAuthor = document.createElement("span");
-            responseAuthor.classList.add("responseAuthor");
-            responseAuthor.textContent = msg.author.username;
-
-            //contenu
-            const responseContent = document.createElement("span");
-            responseContent.classList.add("responseContent");
-            responseContent.textContent = msg.content;
-
-            eachResponse.appendChild(responseAuthor);
-            eachResponse.appendChild(responseContent);
-            responseContainer.appendChild(eachResponse);
-        })
-    }
-    return responseContainer;
-}
 
 const penToEdit=(message)=>{
     const pencil = document.createElement("span")

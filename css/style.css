@@ -31,7 +31,7 @@
 }
 .allMessages, .allMessagesPrives{
     padding-bottom: 60px;
-    overflow-y:scroll; // pour défiler si besoin
+
 }
 .inputsLogin {
     display: flex;
