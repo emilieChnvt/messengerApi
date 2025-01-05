@@ -668,11 +668,23 @@ const reactionDiv = (message, messageId, type)=> {
     })
 
 
+    const reactionCount = {
+        happy: 0,
+        sadd: 0,
+        cryy: 0,
+        vomi: 0,
+    };
+
+    message.reactions.forEach((reaction) => {
+        if (reactionCount[reaction.type] !== undefined) {
+            reactionCount[reaction.type]++;
+        }
+    });
+
+    const reactionExisting = document.createElement("div");
+    reactionExisting.classList.add("reactionExisting");
 
 
-    if(message.reactions && message.reactions.length > 0){
-        const reactionExisting = document.createElement("div");
-        reactionExisting.classList.add("reactionExisting");
 
         message.reactions.forEach((reaction) => {
             const emoji = getEmojiForReaction(reaction.type);
@@ -680,7 +692,7 @@ const reactionDiv = (message, messageId, type)=> {
             reactionSpan.classList.add("reactionCount");
             reactionSpan.setAttribute("data-reaction", reaction.type);
 
-            reactionSpan.textContent = `${emoji} ${reaction.totalCount}`; //emoji + nb
+            reactionSpan.textContent = `${emoji} ${reactionCount[reaction.type]}`; //emoji + nb
 
 
             reactionSpan.addEventListener("click", () => {
@@ -695,7 +707,7 @@ const reactionDiv = (message, messageId, type)=> {
 
             })
         reactionContainer.appendChild(reactionExisting);
-    }
+
     reactionContainer.appendChild(reactionButton);
     reactionContainer.appendChild(reactionMenu);
 
