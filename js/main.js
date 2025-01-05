@@ -248,22 +248,45 @@ const addReactionMessage = (messageId, reactionType) => {
     console.log("Reaction Type:", reactionType);  // Debugging: Check reactionType
 
     emojiReaction(messageId, reactionType).then((res)=>{
-            console.log(res)
+        console.log(res)
+        const emoji = getEmojiForReaction(reactionType);
+        const messageElement = document.querySelector(`[data-message-id="${messageId}"]`);
+        if(!messageElement)return;
+        let reactionContainer = messageElement.querySelector('.reactionExisting');
 
-                    const emoji = getEmojiForReaction(reactionType);
-                    const messageElement = document.querySelector(`[data-message-id="${messageId}"]`);
-                    if(messageElement){
-                        const contentContainer =messageElement.querySelector(".contentContainer");
+        if (!reactionContainer) {
+            reactionContainer = document.createElement("div");
+            reactionContainer.classList.add("reactionExisting");
+            messageElement.querySelector(".contentContainer").appendChild(reactionContainer);
+        }
 
-                        const reactionContainer = document.createElement("div");
-                        reactionContainer.classList.add("reactionContainer");
-                        reactionContainer.innerHTML = emoji;
+        // Recherche du span correspondant à la réaction
+        let reactionSpan = reactionContainer.querySelector(`[data-reaction="${reactionType}"]`);
 
-                       contentContainer.appendChild(reactionContainer);
-
-                    }
-
-
+        if (res.status === "unreacted") {
+            // Si la réaction doit être supprimée
+            if (reactionSpan) {
+                const count = parseInt(reactionSpan.textContent.split(" ")[1]) || 0;
+                if (count > 1) {
+                    reactionSpan.textContent = `${emoji} ${count - 1}`;
+                } else {
+                    reactionSpan.remove();
+                }
+            }
+        } else if (res.status === "reacted") {
+            // Si la réaction doit être ajoutée
+            if (!reactionSpan) {
+                reactionSpan = document.createElement("span");
+                reactionSpan.classList.add("reactionCount");
+                reactionSpan.setAttribute("data-reaction", reactionType);
+                reactionSpan.textContent = `${emoji} 1`;
+                reactionContainer.appendChild(reactionSpan);
+            } else {
+                // Mise à jour du compteur
+                const count = parseInt(reactionSpan.textContent.split(" ")[1]) || 0;
+                reactionSpan.textContent = `${emoji} ${count + 1}`;
+            }
+            }
         })
 }
 const getEmojiForReaction =(reactionType) => {
@@ -609,7 +632,7 @@ const editMessage = (message, messageId, ) => {
     messagesDiv.appendChild(saveButton);
 
 }
-const reactionDiv = (message)=> {
+const reactionDiv = (message, messageId, type)=> {
     console.log(message)
     const reactionContainer = document.createElement("div");
     reactionContainer.classList.add("reactionContainer");
@@ -637,38 +660,41 @@ const reactionDiv = (message)=> {
     })
     reactionMenu.addEventListener("click", (e)=>{
         if(e.target.classList.contains("reactionOption")){
-
             const reactionType = e.target.getAttribute("data-reaction");
             addReactionMessage(message.id, reactionType)
             reactionMenu.style.display = "none";
 
         }
     })
-    let reactionCount={};
+
+
+
 
     if(message.reactions && message.reactions.length > 0){
-
-        message.reactions.forEach(reaction => {
-           const type = reaction.type;
-           if(reactionCount[type]){
-               reactionCount[type]+=1;
-           }else{
-               reactionCount[type]=1;
-           }
-        });
         const reactionExisting = document.createElement("div");
         reactionExisting.classList.add("reactionExisting");
 
-        reactions.forEach(type => {
-            if(reactionCount[type]>0){
-                const emoji = getEmojiForReaction(type);
-                const reactionSpan = document.createElement("span");
-                reactionSpan.classList.add("reactionCount");
-                reactionSpan.textContent = `${emoji} ${reactionCount[type]}`; //emoji + nb
-                reactionExisting.appendChild(reactionSpan);
-            }
-        })
-reactionContainer.appendChild(reactionExisting);
+        message.reactions.forEach((reaction) => {
+            const emoji = getEmojiForReaction(reaction.type);
+            const reactionSpan = document.createElement("span");
+            reactionSpan.classList.add("reactionCount");
+            reactionSpan.setAttribute("data-reaction", reaction.type);
+
+            reactionSpan.textContent = `${emoji} ${reaction.totalCount}`; //emoji + nb
+
+
+            reactionSpan.addEventListener("click", () => {
+
+                console.log("Click détecté sur :", reactionSpan.textContent);
+                console.log("Message ID:", messageId);
+                console.log("Reaction Type:", type);
+
+                addReactionMessage(messageId, type);
+            });
+            reactionExisting.appendChild(reactionSpan);
+
+            })
+        reactionContainer.appendChild(reactionExisting);
     }
     reactionContainer.appendChild(reactionButton);
     reactionContainer.appendChild(reactionMenu);
