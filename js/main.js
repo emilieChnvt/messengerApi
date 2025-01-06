@@ -312,6 +312,7 @@ const displayChatConv=()=>{
 
 }
 
+//arrow to goBack on the page
 const removeArrowToGoBack = ()=> {
     const arrow = document.querySelector(".arrowToGoBack");
     console.log(arrow);
@@ -442,8 +443,10 @@ const addMessageToChat = (message, type) => {
     const responseContainer= createResponseContainer(message)
     messagesDiv.appendChild(responseContainer)
 
-
+if(photoProfil){
     aMessage.appendChild(photoProfil);
+
+}
     aMessage.appendChild(messagesDiv);
     allMessagesContainer.appendChild(aMessage);
 
@@ -481,15 +484,17 @@ const createMessageContainer=(message)=>{
 
     return { aMessage, messagesDiv, contentContainer, messageContent }; // pour retourner plusierus choses
 }
-const addProfileImg=(message, messagesDiv)=>{
+const addProfileImg=(message)=>{
+    console.log(message.author.image)
+
+    if(message.author.username === "emiliech") return null;
+    if(!message.author.image || !message.author.image.imageName) return null
     const photoProfil = document.createElement("img");
     photoProfil.classList.add("photoProfil");
 
+    const imageUrl = `https://example.com/uploads/${message.author.image.imageName}`;
 
-    if (message.author.username !== "emiliech" && message.author.image && message.author.image.imageName) {
-        const imageUrl = `https://example.com/uploads/${message.author.image.imageName}`;
-        photoProfil.src = `url(${imageUrl})`;
-    }
+    photoProfil.src = imageUrl;
     return photoProfil;
 }
 const authorAction = (message, messagesDiv)=>{
@@ -531,17 +536,17 @@ const createResponseContainer=(message)=>{
     }
     return responseContainer;
 }
-const createResponse=(msg)=>{
+const createResponse=(message)=>{
     const eachResponse = document.createElement("div");
     eachResponse.classList.add("eachResponse");
 
     const responseAuthor = document.createElement("span");
     responseAuthor.classList.add("responseAuthor");
-    responseAuthor.textContent = msg.author.username;
+    responseAuthor.textContent = message.author.username;
 
     const responseContent = document.createElement("span");
     responseContent.classList.add("responseContent");
-    responseContent.textContent = msg.content;
+    responseContent.textContent = message.content;
 
     eachResponse.appendChild(responseAuthor);
     eachResponse.appendChild(responseContent);
