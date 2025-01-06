@@ -127,9 +127,8 @@ const displayChatConvPrive = ()=>{
     allConv.innerHTML = "";
 
     convsPrive().then((res)=>{
-        console.log("Avant modification, conversations =", conversations);
-        conversations = res;
-        console.log("Après modification, conversations =", conversations);
+        conversations = res
+
         res.forEach((item)=>{
 
             let conv = `<div class="grpPrive d-flex align-items-center justify-content-between borderOrange rounded-3 px-3 py-1" id="${item.id}">
@@ -162,20 +161,10 @@ const toogleBtnToShowConvPrive = () => {
     })
 }
 const displayConvPrive = (itemId) =>{
-    discussionsPrivePage.classList.add("hidden");
-    discussionsPrivePage.classList.remove("visible");
     currentId = itemId //id conv
 
-    if (!Array.isArray(conversations)) {
-        console.error("Erreur : conversations n'est pas un tableau.");
-        return;
-    }
+    const currentConv = conversations.find(conv =>conv.id === +itemId); //+ pour convertir en nombre (c'était une string)
 
-    const currentConv = conversations.find(conv => conv.id === +itemId);
-    if (!currentConv) {
-        console.error(`Erreur : Conversation non trouvée avec l'id: ${itemId}`);
-        return;
-    }
     const recipientId = currentConv.with.id; // id utilisateur
 
     if(recipientId){
@@ -184,27 +173,21 @@ const displayConvPrive = (itemId) =>{
 
         chatPrive.classList.add("visible");
         chatPrive.classList.remove("hidden");
-        displayArrowToGoBack()
-        displayMessagesPrive(itemId)
+        displayArrowToGoBack();
+        displayMessagesPrive(itemId);
 
 
     }
 
 
-    chatPrive.classList.add("visble");
-    chatPrive.classList.remove("hidden");
-    displayArrowToGoBack()
-    displayMessagesPrive(itemId)
 }
-
-
 const displayMessagesPrive = (itemId) =>{
     const allMessagesPrives = document.querySelector(".allMessagesPrives");
     allMessagesPrives.innerHTML = "";  // Réinitialise la liste des messages privés
     currentId = itemId
 
     getConvPrive(itemId).then((res)=>{
-
+        console.log(res);
         const author = res.with.username;
         const authorElement = document.querySelector(".authorName")
         authorElement.classList.add("visible");
@@ -230,6 +213,7 @@ const displayMessagesPrive = (itemId) =>{
 
 }
 const addMessagePrive = (itemId) => {
+    console.log(itemId);
     const btnMessagePrive = document.querySelector(".btnMessagePrive");
 
     btnMessagePrive.removeEventListener("click", handleSendMessage)
@@ -237,11 +221,13 @@ const addMessagePrive = (itemId) => {
 }
 
 
-const handleSendMessage = () => {
+const handleSendMessage = (itemId) => {
     const inputMessagePrive = document.querySelector(".inputMessagePrive");
+    const currentConv = conversations.find(conv =>conv.id === +itemId); //+ pour convertir en nombre (c'était une string)
 
-    const recipientId = conversations.with.id; // id utilisateur
-
+    console.log(conversations);
+    const recipientId = currentConv.with.id; // id utilisateur
+console.log(recipientId);
         newPrivateMessage(inputMessagePrive.value, recipientId).then((res)=>{
             console.log(res);
             addMessageToChat(

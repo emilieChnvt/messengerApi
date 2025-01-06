@@ -7,6 +7,13 @@
     border: 1px solid #FFA72D;
 
 }
+.containerDiv{
+    height: 100vh;
+    ;
+}
+.login{
+    height: 90%;
+}
 .btnSelected{
     background-color: rgba(166, 166, 166, 0.73);
 }
