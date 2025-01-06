@@ -403,6 +403,7 @@ const displayInputMessage = (messageId, reactionType) => {
     })
 }
 const addMessageToChat = (message, type) => {
+    console.log('its here', message)
     let allMessagesContainer = (type === 'group') ? document.querySelector('.allMessages'): document.querySelector('.allMessagesPrives')
 
     const {aMessage, messagesDiv, contentContainer, messageContent} = createMessageContainer(message)
@@ -675,37 +676,44 @@ const reactionDiv = (message, messageId, type)=> {
         vomi: 0,
     };
 
-    message.reactions.forEach((reaction) => {
-        if (reactionCount[reaction.type] !== undefined) {
-            reactionCount[reaction.type]++;
-        }
-    });
+    if(message.reactions && message.reactions.length >0){
+        message.reactions.forEach((reaction) => {
+            if (reactionCount[reaction.type] !== undefined) {
+                reactionCount[reaction.type]++;
+            }
+        });
+    }
+
 
     const reactionExisting = document.createElement("div");
     reactionExisting.classList.add("reactionExisting");
 
 
-
+    if(message.reactions && message.reactions.length >0){
         message.reactions.forEach((reaction) => {
-            const emoji = getEmojiForReaction(reaction.type);
-            const reactionSpan = document.createElement("span");
-            reactionSpan.classList.add("reactionCount");
-            reactionSpan.setAttribute("data-reaction", reaction.type);
+        const emoji = getEmojiForReaction(reaction.type);
+        const reactionSpan = document.createElement("span");
+        reactionSpan.classList.add("reactionCount");
+        reactionSpan.setAttribute("data-reaction", reaction.type);
 
-            reactionSpan.textContent = `${emoji} ${reactionCount[reaction.type]}`; //emoji + nb
+        reactionSpan.textContent = `${emoji} ${reactionCount[reaction.type]}`; //emoji + nb
+        console.log("vhgvjh", message.reactions);
 
 
-            reactionSpan.addEventListener("click", () => {
+        reactionSpan.addEventListener("click", () => {
 
-                console.log("Click détecté sur :", reactionSpan.textContent);
-                console.log("Message ID:", messageId);
-                console.log("Reaction Type:", type);
+            console.log("Click détecté sur :", reactionSpan.textContent);
+            console.log("Message ID:", messageId);
+            console.log("Reaction Type:", type);
 
-                addReactionMessage(messageId, type);
-            });
-            reactionExisting.appendChild(reactionSpan);
+            addReactionMessage(messageId, type);
+        });
+        reactionExisting.appendChild(reactionSpan);
 
-            })
+    })
+    }
+
+
         reactionContainer.appendChild(reactionExisting);
 
     reactionContainer.appendChild(reactionButton);
