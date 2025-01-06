@@ -27,7 +27,6 @@ const createAccount=()=>{
         e.preventDefault();
         register(username.value, password.value)
             .then((response) => {
-                console.log(response);
                 if (response.status === 200) {
                     createAccountPage.classList.add("hidden");
                     createAccountPage.classList.remove("visible");
@@ -85,13 +84,12 @@ const displayHomeChat = ()=> {
 const whoAmIDiv = () => {
     const nav = document.querySelector(".nav");
     whoami().then((res)=>{
-        console.log(res);
         let profil = `<div class="align-right">
                                  <span>${res.displayName}</span> 
                                  <img src=${res.imageUrl} alt="imgProfile" class=" photoProfil rounded-circle" >
                                 
                             </div>`
-        nav.innerHTML = profil;
+        nav.innerHTML += profil;
     })
 }
 const chooseBtnConv = ()=> {
@@ -129,8 +127,9 @@ const displayChatConvPrive = ()=>{
     allConv.innerHTML = "";
 
     convsPrive().then((res)=>{
-        conversations = res
-
+        console.log("Avant modification, conversations =", conversations);
+        conversations = res;
+        console.log("Après modification, conversations =", conversations);
         res.forEach((item)=>{
 
             let conv = `<div class="grpPrive d-flex align-items-center justify-content-between borderOrange rounded-3 px-3 py-1" id="${item.id}">
@@ -163,10 +162,20 @@ const toogleBtnToShowConvPrive = () => {
     })
 }
 const displayConvPrive = (itemId) =>{
+    discussionsPrivePage.classList.add("hidden");
+    discussionsPrivePage.classList.remove("visible");
     currentId = itemId //id conv
 
-    const currentConv = conversations.find(conv =>conv.id === +itemId); //+ pour convertir en nombre (c'était une string)
-    console.log(currentConv);
+    if (!Array.isArray(conversations)) {
+        console.error("Erreur : conversations n'est pas un tableau.");
+        return;
+    }
+
+    const currentConv = conversations.find(conv => conv.id === +itemId);
+    if (!currentConv) {
+        console.error(`Erreur : Conversation non trouvée avec l'id: ${itemId}`);
+        return;
+    }
     const recipientId = currentConv.with.id; // id utilisateur
 
     if(recipientId){
@@ -182,14 +191,24 @@ const displayConvPrive = (itemId) =>{
     }
 
 
+    chatPrive.classList.add("visble");
+    chatPrive.classList.remove("hidden");
+    displayArrowToGoBack()
+    displayMessagesPrive(itemId)
 }
+
+
 const displayMessagesPrive = (itemId) =>{
     const allMessagesPrives = document.querySelector(".allMessagesPrives");
     allMessagesPrives.innerHTML = "";  // Réinitialise la liste des messages privés
     currentId = itemId
 
     getConvPrive(itemId).then((res)=>{
-        conversations = res
+
+        const author = res.with.username;
+        const authorElement = document.querySelector(".authorName")
+        authorElement.classList.add("visible");
+        authorElement.innerHTML = author;
             res.privateMessages.forEach((msg)=>{
                 addMessageToChat(msg, 'private')
             })
@@ -218,16 +237,10 @@ const addMessagePrive = (itemId) => {
 }
 
 
-
-
-
 const handleSendMessage = () => {
-    console.log('conversation', conversations)
     const inputMessagePrive = document.querySelector(".inputMessagePrive");
 
-    console.log('currentconv', conversations);
     const recipientId = conversations.with.id; // id utilisateur
-
 
         newPrivateMessage(inputMessagePrive.value, recipientId).then((res)=>{
             console.log(res);
@@ -244,11 +257,7 @@ const handleSendMessage = () => {
 
 }
 const addReactionMessage = (messageId, reactionType) => {
-    console.log("Message ID:", messageId);  // Debugging: Check messageId
-    console.log("Reaction Type:", reactionType);  // Debugging: Check reactionType
-
     emojiReaction(messageId, reactionType).then((res)=>{
-        console.log(res)
         const emoji = getEmojiForReaction(reactionType);
         const messageElement = document.querySelector(`[data-message-id="${messageId}"]`);
         if(!messageElement)return;
@@ -315,11 +324,11 @@ const displayChatConv=()=>{
 //arrow to goBack on the page
 const removeArrowToGoBack = ()=> {
     const arrow = document.querySelector(".arrowToGoBack");
-    console.log(arrow);
     if(arrow){
         arrow.remove()
     }
 }
+
 const goBack = () => {
     discussionsGroupePage.classList.add("visible");
     discussionsGroupePage.classList.remove("hidden");
@@ -331,6 +340,8 @@ const goBack = () => {
     chatPrive.classList.remove("visible");
     removeArrowToGoBack()
 }
+
+
 const goBackPrive = ()=>{
     discussionsPrivePage.classList.add("visible");
     discussionsPrivePage.classList.remove("hidden");
@@ -340,7 +351,14 @@ const goBackPrive = ()=>{
 
     chatPrive.classList.add("hidden");
     chatPrive.classList.remove("visible");
+
+    const authorName = document.querySelector(".authorName");
+    authorName.classList.add("hidden");
+    authorName.classList.remove("visible");
     removeArrowToGoBack()
+
+
+
 }
 const displayArrowToGoBack = () => {
     const nav = document.querySelector(".nav");
@@ -352,9 +370,9 @@ const displayArrowToGoBack = () => {
 
         const arrowToGoBack = document.querySelector(".arrowToGoBack");
         arrowToGoBack.addEventListener("click", ()=>{
-            if(discussionsGroupePage.classList.contains("visible")){
+            if(chat.classList.contains("visible")){
                 goBack();
-            }else{
+            }else if (chatPrive.classList.contains("visible")){
                 goBackPrive()
             }
         } );
@@ -362,12 +380,8 @@ const displayArrowToGoBack = () => {
 
 }
 
-
-
-
 const toogleBtnToShowConv = () => {
     grp.addEventListener("click", ()=>{
-        console.log("grp");
         displayConv()
     })
 }
