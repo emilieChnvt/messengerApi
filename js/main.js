@@ -291,7 +291,8 @@ const addReactionMessage = (messageId, reactionType) => {
 }
 const getEmojiForReaction =(reactionType) => {
     const reactions={
-    "happy": "🙂",
+    "smile": "🙂",
+        "happy": "😃",
     "sadd": "😭",
     "cryy": "😢",
     "vomi": "🤢"
@@ -310,37 +311,13 @@ const displayChatConv=()=>{
 
 
 }
+
 const removeArrowToGoBack = ()=> {
     const arrow = document.querySelector(".arrowToGoBack");
     console.log(arrow);
     if(arrow){
         arrow.remove()
     }
-}
-const toogleBtnToShowConv = () => {
-    grp.addEventListener("click", ()=>{
-        console.log("grp");
-        displayConv()
-    })
-}
-const displayConv=()=>{
-    discussionsGroupePage.classList.add("hidden");
-    discussionsGroupePage.classList.remove("visible");
-    displayArrowToGoBack()
-   displayMessages()
-}
-const displayArrowToGoBack = () => {
-    const nav = document.querySelector(".nav");
-
-    if(!document.querySelector(".arrowToGoBack")){
-        const arrow = document.createElement("span");
-        arrow.innerHTML = '<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 320 512" style="width:20px; height:20px" class="arrowToGoBack"><path d="M9.4 233.4c-12.5 12.5-12.5 32.8 0 45.3l192 192c12.5 12.5 32.8 12.5 45.3 0s12.5-32.8 0-45.3L77.3 256 246.6 86.6c12.5-12.5 12.5-32.8 0-45.3s-32.8-12.5-45.3 0l-192 192z"/></svg>'
-        nav.prepend(arrow);
-
-        const arrowToGoBack = document.querySelector(".arrowToGoBack");
-        arrowToGoBack.addEventListener("click", goBack);
-    }
-
 }
 const goBack = () => {
     discussionsGroupePage.classList.add("visible");
@@ -352,6 +329,52 @@ const goBack = () => {
     chatPrive.classList.add("hidden");
     chatPrive.classList.remove("visible");
     removeArrowToGoBack()
+}
+const goBackPrive = ()=>{
+    discussionsPrivePage.classList.add("visible");
+    discussionsPrivePage.classList.remove("hidden");
+
+    chat.classList.add("hidden");
+    chat.classList.remove("visible");
+
+    chatPrive.classList.add("hidden");
+    chatPrive.classList.remove("visible");
+    removeArrowToGoBack()
+}
+const displayArrowToGoBack = () => {
+    const nav = document.querySelector(".nav");
+
+    if(!document.querySelector(".arrowToGoBack")){
+        const arrow = document.createElement("span");
+        arrow.innerHTML = '<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 320 512" style="width:20px; height:20px" class="arrowToGoBack"><path d="M9.4 233.4c-12.5 12.5-12.5 32.8 0 45.3l192 192c12.5 12.5 32.8 12.5 45.3 0s12.5-32.8 0-45.3L77.3 256 246.6 86.6c12.5-12.5 12.5-32.8 0-45.3s-32.8-12.5-45.3 0l-192 192z"/></svg>'
+        nav.prepend(arrow);
+
+        const arrowToGoBack = document.querySelector(".arrowToGoBack");
+        arrowToGoBack.addEventListener("click", ()=>{
+            if(discussionsGroupePage.classList.contains("visible")){
+                goBack();
+            }else{
+                goBackPrive()
+            }
+        } );
+    }
+
+}
+
+
+
+
+const toogleBtnToShowConv = () => {
+    grp.addEventListener("click", ()=>{
+        console.log("grp");
+        displayConv()
+    })
+}
+const displayConv=()=>{
+    discussionsGroupePage.classList.add("hidden");
+    discussionsGroupePage.classList.remove("visible");
+    displayArrowToGoBack()
+   displayMessages()
 }
 const displayMessages = () => {
     const allMessages = document.querySelector(".allMessages");
