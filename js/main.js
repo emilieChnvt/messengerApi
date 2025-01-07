@@ -435,7 +435,11 @@ const addMessageToChat = (message, type) => {
 
     authorAction(message, messagesDiv);
     addMessageId(message, messagesDiv);
-    addReactions(message, contentContainer);
+
+    if(allMessagesContainer === document.querySelector('.allMessagesPrives')){
+        addReactions(message, contentContainer);
+    }
+
 
     const responseButton = createResponseButton(message);
     messagesDiv.appendChild(responseButton)
@@ -443,10 +447,10 @@ const addMessageToChat = (message, type) => {
     const responseContainer= createResponseContainer(message)
     messagesDiv.appendChild(responseContainer)
 
-if(photoProfil){
-    aMessage.appendChild(photoProfil);
+    if(photoProfil){
+        aMessage.appendChild(photoProfil);
 
-}
+    }
     aMessage.appendChild(messagesDiv);
     allMessagesContainer.appendChild(aMessage);
 
