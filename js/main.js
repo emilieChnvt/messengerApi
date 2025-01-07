@@ -201,18 +201,7 @@ const displayMessagesPrive = (itemId) =>{
         })
         addMessagePrive(itemId)
 
-        const messages= document.querySelectorAll(".allMessagesPrives .aMessage .messagesDiv");
-        messages.forEach((message)=>{
-            const messageId = message.getAttribute("data-message-id");
 
-            const reactionsButtons = message.querySelectorAll(".reactionButton");
-            reactionsButtons.forEach((reaction)=>{
-                reaction.addEventListener("click", ()=>{
-                    const reactionType = button.getAttribute("data-reaction-type");
-                    addReactionPrivateMessage(messageId, reactionType);
-                })
-            })
-        })
     })
 
 }
@@ -254,6 +243,7 @@ const createReactionMenu=(message, messageId, type)=>{
     reactionContainer.style.position="relative";
 
     const reactionButton = document.createElement("span");
+    reactionButton.classList.add('reactionButton');
     reactionButton.innerHTML= "+"
     reactionButton.style.cursor = "pointer";
 
