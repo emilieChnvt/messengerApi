@@ -340,7 +340,6 @@ const addReactionMessage = (messageId, reactionType, type) => {
             handleReactionResponse(res, reactionContainer, emoji, reactionType);
 
 
-
         })
     }else if (type === 'group'){
         emojiReactionGeneral(messageId, reactionType).then((res)=>{
@@ -489,7 +488,7 @@ const displayMessages = () => {
     displayInputMessage()
 }
 
-const displayInputMessage = (messageId, reactionType) => {
+const displayInputMessage = () => {
 
     const btnMessage = document.querySelector(".btnMessage");
     btnMessage.addEventListener("click", ()=>{
@@ -529,11 +528,12 @@ const addMessageToChat = (message, type) => {
         const reactionMenu = createReactionMenu(message, message.id, type)
         contentContainer.appendChild(reactionMenu);
 
+    }
+
+    if(type === 'group' && message.author.username !== currentUser ){
         const responseButton = createResponseButton(message);
         messagesDiv.appendChild(responseButton)
     }
-
-
     const responseContainer= createResponseContainer(message)
     messagesDiv.appendChild(responseContainer)
 
@@ -606,6 +606,7 @@ const authorAction = (message, messagesDiv, )=>{
         messagesDiv.appendChild(authorOfMessage);
         messagesDiv.style.justifyContent = "flex-start"
 
+
     }
 }
 const createResponseButton=(message)=>{
@@ -633,8 +634,6 @@ const createResponse=(message)=>{
 
     const eachResponse = document.createElement("div");
     eachResponse.classList.add("eachResponse");
-
-
 
     const responseAuthor = document.createElement("span");
     responseAuthor.classList.add("responseAuthor");
@@ -670,7 +669,7 @@ const toggleMessageToAddResponse = (message ) => {
 
         response(message.id, content).then((res)=>{
             console.log(res)
-            displayResponse(message.id, res, content);
+            displayResponse(message.id, content);
             responseInput.remove()
             sendResponse.remove();
         })
@@ -684,7 +683,7 @@ const toggleMessageToAddResponse = (message ) => {
 
 }
 
-const displayResponse=( messageId, responseData )=>{// response(message.id, content)
+const displayResponse=( messageId, content )=>{// response(message.id, content)
     const messageDiv = document.querySelector(`.messagesDiv[data-message-id="${messageId}"]`);
 
     let responseContainer = document.querySelector(".responseContainer");
@@ -701,12 +700,12 @@ const displayResponse=( messageId, responseData )=>{// response(message.id, cont
     //auteur
     const responseAuthor = document.createElement("span");
     responseAuthor.classList.add("responseAuthor");
-    responseAuthor.innerHTML = "emiliech";
+    responseAuthor.innerHTML = currentUser;
 
     //contenu
     const responseContent = document.createElement("span");
     responseContent.classList.add("responseContent");
-    responseContent.textContent = responseData.content;
+    responseContent.textContent = content;
 
     eachResponse.appendChild(responseAuthor);
     eachResponse.appendChild(responseContent);
