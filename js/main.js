@@ -11,6 +11,7 @@ const chatPrive = document.querySelector(".chatPrive");
 
 let currentId = null;
 let conversations = [];
+let currentUser = null;
 
 let token = null;
 let freshener = null
@@ -52,10 +53,12 @@ const displayLoginForm = ()=>{
     const password = document.querySelector(".password");
     const submit = document.querySelector(".submit");
 
+
     submit.addEventListener('click', (e)=>{
         e.preventDefault()
         getToken(username.value, password.value).then((res)=>{
             if(res.token){
+                currentUser = username.value;
                 displayHomeChat()
             }
         })
@@ -69,6 +72,7 @@ const displayLoginForm = ()=>{
 
         createAccount()
     })
+
 }
 const displayHomeChat = ()=> {
     login.style.display = "none";
@@ -505,8 +509,10 @@ const addProfileImg=(message)=>{
     photoProfil.src = imageUrl;
     return photoProfil;
 }
-const authorAction = (message, messagesDiv)=>{
-    if (message.author.username === "emiliech") {
+const authorAction = (message, messagesDiv, )=>{
+    console.log(currentUser)
+    if (message.author.username === currentUser) {
+        console.log(currentUser)
         messagesDiv.classList.add("marg");
         messagesDiv.classList.add("messagesDivByMe");
         messagesDiv.style.justifyContent = "flex-end"
