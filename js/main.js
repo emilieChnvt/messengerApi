@@ -196,23 +196,23 @@ const displayMessagesPrive = (itemId) =>{
         const authorElement = document.querySelector(".authorName")
         authorElement.classList.add("visible");
         authorElement.innerHTML = author;
-            res.privateMessages.forEach((msg)=>{
-                addMessageToChat(msg, 'private')
-            })
+        res.privateMessages.forEach((msg)=>{
+            addMessageToChat(msg, 'private')
+        })
         addMessagePrive(itemId)
 
         const messages= document.querySelectorAll(".allMessagesPrives .aMessage .messagesDiv");
-            messages.forEach((message)=>{
-                const messageId = message.getAttribute("data-message-id");
+        messages.forEach((message)=>{
+            const messageId = message.getAttribute("data-message-id");
 
-                const reactionsButtons = message.querySelectorAll(".reactionButton");
-                reactionsButtons.forEach((reaction)=>{
-                    reaction.addEventListener("click", ()=>{
-                        const reactionType = button.getAttribute("data-reaction-type");
-                        addReactionPrivateMessage(messageId, reactionType);
-                    })
+            const reactionsButtons = message.querySelectorAll(".reactionButton");
+            reactionsButtons.forEach((reaction)=>{
+                reaction.addEventListener("click", ()=>{
+                    const reactionType = button.getAttribute("data-reaction-type");
+                    addReactionPrivateMessage(messageId, reactionType);
                 })
             })
+        })
     })
 
 }
@@ -231,19 +231,19 @@ const handleSendMessage = (itemId) => {
 
     console.log(conversations);
     const recipientId = currentConv.with.id; // id utilisateur
-console.log(recipientId);
-        newPrivateMessage(inputMessagePrive.value, recipientId).then((res)=>{
-            console.log(res);
-            addMessageToChat(
-                {
-                    content:inputMessagePrive.value,
-                    author: { username: "emiliech"},
-                },
-                "private"
-            );
+    console.log(recipientId);
+    newPrivateMessage(inputMessagePrive.value, recipientId).then((res)=>{
+        console.log(res);
+        addMessageToChat(
+            {
+                content:inputMessagePrive.value,
+                author: { username: "emiliech"},
+            },
+            "private"
+        );
 
-            inputMessagePrive.value = "";
-        })
+        inputMessagePrive.value = "";
+    })
 
 }
 
@@ -334,99 +334,67 @@ const createReactionMenu=(message, messageId, type)=>{
 }
 const addReactionMessage = (messageId, reactionType, type) => {
     console.log('type is ', type)
+    const emoji = getEmojiForReaction(reactionType);
+    const messageElement = document.querySelector(`[data-message-id="${messageId}"]`);
+    if(!messageElement)return;
+    let reactionContainer = messageElement.querySelector('.reactionExisting');
+
+    if (!reactionContainer) {
+        reactionContainer = document.createElement("div");
+        reactionContainer.classList.add("reactionExisting");
+        messageElement.querySelector(".contentContainer").appendChild(reactionContainer);
+    }
+
     if(type === 'private'){
-        emojiReaction(messageId, reactionType).then((res)=>{
-            const emoji = getEmojiForReaction(reactionType);
-            const messageElement = document.querySelector(`[data-message-id="${messageId}"]`);
-            if(!messageElement)return;
-            let reactionContainer = messageElement.querySelector('.reactionExisting');
+        emojiReaction(messageId, reactionType).then((res)=> {
+            handleReactionResponse(res, reactionContainer, emoji, reactionType);
 
-            if (!reactionContainer) {
-                reactionContainer = document.createElement("div");
-                reactionContainer.classList.add("reactionExisting");
-                messageElement.querySelector(".contentContainer").appendChild(reactionContainer);
-            }
 
-            // Recherche du span correspondant à la réaction
-            let reactionSpan = reactionContainer.querySelector(`[data-reaction="${reactionType}"]`);
 
-            if (res.status === "unreacted") {
-                // Si la réaction doit être supprimée
-                if (reactionSpan) {
-                    const count = parseInt(reactionSpan.textContent.split(" ")[1]) || 0;
-                    if (count > 1) {
-                        reactionSpan.textContent = `${emoji} ${count - 1}`;
-                    } else {
-                        reactionSpan.remove();
-                    }
-                }
-            } else if (res.status === "reacted") {
-                // Si la réaction doit être ajoutée
-                if (!reactionSpan) {
-                    reactionSpan = document.createElement("span");
-                    reactionSpan.classList.add("reactionCount");
-                    reactionSpan.setAttribute("data-reaction", reactionType);
-                    reactionSpan.textContent = `${emoji} 1`;
-                    reactionContainer.appendChild(reactionSpan);
-                } else {
-                    // Mise à jour du compteur
-                    const count = parseInt(reactionSpan.textContent.split(" ")[1]) || 0;
-                    reactionSpan.textContent = `${emoji} ${count + 1}`;
-                }
-            }
         })
     }else if (type === 'group'){
         emojiReactionGeneral(messageId, reactionType).then((res)=>{
-            const emoji = getEmojiForReaction(reactionType);
-            const messageElement = document.querySelector(`[data-message-id="${messageId}"]`);
-            if(!messageElement)return;
-            let reactionContainer = messageElement.querySelector('.reactionExisting');
-
-            if (!reactionContainer) {
-                reactionContainer = document.createElement("div");
-                reactionContainer.classList.add("reactionExisting");
-                messageElement.querySelector(".contentContainer").appendChild(reactionContainer);
-            }
-
-            // Recherche du span correspondant à la réaction
-            let reactionSpan = reactionContainer.querySelector(`[data-reaction="${reactionType}"]`);
-
-            if (res.status === "unreacted") {
-                // Si la réaction doit être supprimée
-                if (reactionSpan) {
-                    const count = parseInt(reactionSpan.textContent.split(" ")[1]) || 0;
-                    if (count > 1) {
-                        reactionSpan.textContent = `${emoji} ${count - 1}`;
-                    } else {
-                        reactionSpan.remove();
-                    }
-                }
-            } else if (res.status === "reacted") {
-                // Si la réaction doit être ajoutée
-                if (!reactionSpan) {
-                    reactionSpan = document.createElement("span");
-                    reactionSpan.classList.add("reactionCount");
-                    reactionSpan.setAttribute("data-reaction", reactionType);
-                    reactionSpan.textContent = `${emoji} 1`;
-                    reactionContainer.appendChild(reactionSpan);
-                } else {
-                    // Mise à jour du compteur
-                    const count = parseInt(reactionSpan.textContent.split(" ")[1]) || 0;
-                    reactionSpan.textContent = `${emoji} ${count + 1}`;
-                }
-            }
+            handleReactionResponse(res, reactionContainer, emoji, reactionType);
 
         })
     }
 
 }
+const handleReactionResponse=(res, reactionContainer, emoji, reactionType)=>{
+    let reactionSpan = reactionContainer.querySelector(`[data-reaction="${reactionType}"]`);
+
+    if (res.status === "unreacted") {
+        // Si la réaction doit être supprimée
+        if (reactionSpan) {
+            const count = parseInt(reactionSpan.textContent.split(" ")[1]) || 0;
+            if (count > 1) {
+                reactionSpan.textContent = `${emoji} ${count - 1}`;
+            } else {
+                reactionSpan.remove();
+            }
+        }
+    } else if (res.status === "reacted") {
+        // Si la réaction doit être ajoutée
+        if (!reactionSpan) {
+            reactionSpan = document.createElement("span");
+            reactionSpan.classList.add("reactionCount");
+            reactionSpan.setAttribute("data-reaction", reactionType);
+            reactionSpan.textContent = `${emoji} 1`;
+            reactionContainer.appendChild(reactionSpan);
+        } else {
+            // Mise à jour du compteur
+            const count = parseInt(reactionSpan.textContent.split(" ")[1]) || 0;
+            reactionSpan.textContent = `${emoji} ${count + 1}`;
+        }
+    }
+}
 const getEmojiForReaction =(reactionType) => {
     const reactions={
-    "smile": "🙂",
+        "smile": "🙂",
         "happy": "😃",
-    "sadd": "😭",
-    "cryy": "😢",
-    "vomi": "🤢"
+        "sadd": "😭",
+        "cryy": "😢",
+        "vomi": "🤢"
     }
     return reactions[reactionType]
 }
@@ -508,7 +476,7 @@ const displayConv=()=>{
     discussionsGroupePage.classList.add("hidden");
     discussionsGroupePage.classList.remove("visible");
     displayArrowToGoBack()
-   displayMessages()
+    displayMessages()
 }
 const displayMessages = () => {
     const allMessages = document.querySelector(".allMessages");
@@ -521,6 +489,7 @@ const displayMessages = () => {
     chat.classList.remove("hidden");
 
     getMessages().then(res => {
+        console.log(res)
         chat.classList.remove("hidden");
         chat.classList.add("visible");
         res.forEach(msg => {
@@ -819,7 +788,7 @@ const addImageToChat=(imageUrl)=>{
     imageElement.style.maxWidth="300px";
 
     messageElement.appendChild(imageElement);
-   allMessagesContainer.appendChild(messageElement);
+    allMessagesContainer.appendChild(messageElement);
 }
 document.querySelectorAll(".sendImageButton").forEach((el)=>{
     el.addEventListener("click", () => {
@@ -828,18 +797,18 @@ document.querySelectorAll(".sendImageButton").forEach((el)=>{
         const imageFile = imageInput.files[0];  // Récupère le fichier image sélectionné par l'utilisateur
 
 
-            privatePhoto(imageFile).then((res)=>{
-                console.log(res)
+        privatePhoto(imageFile).then((res)=>{
+            console.log(res)
 
-                sendMessageWithImage(imageId,'hicds').then((res)=> {
-                    const imageUrl = res.imageUrl || res.imageUrl;
-                    addImageToChat(imageUrl)
+            sendMessageWithImage(imageId,'hicds').then((res)=> {
+                const imageUrl = res.imageUrl || res.imageUrl;
+                addImageToChat(imageUrl)
 
 
-                })
+            })
 
-            });
-})
+        });
+    })
 
 });
 
@@ -869,10 +838,10 @@ async function register(username, password){
         })
     }
     return await fetch('https://b1messenger.esdlyon.dev/register', params)
-    .then(res => res.json())
-    .then(data => {
-        return data
-    })
+        .then(res => res.json())
+        .then(data => {
+            return data
+        })
 }
 async function getToken(username, password) {
     let params = {
@@ -932,9 +901,9 @@ async function newMessage(inputMessage){
             "Content-Type": "application/json",
             "Authorization": "Bearer " + token
         },
-       body: JSON.stringify({
-           content: inputMessage
-       })
+        body: JSON.stringify({
+            content: inputMessage
+        })
     }
     return await fetch('https://b1messenger.esdlyon.dev/api/messages/new', params)
         .then(res => res.json())
@@ -1018,11 +987,11 @@ async function emojiReaction(messageId, reactionType){
 
     }
     return await fetch(`https://b1messenger.esdlyon.dev/api/private/message/${messageId}/${reactionType}`, params)
-    .then(res => res.json())
-    .then(data => {
-        console.log(data)
-        return data
-    })
+        .then(res => res.json())
+        .then(data => {
+            console.log(data)
+            return data
+        })
 }
 async function emojiReactionGeneral(){
     let params ={
@@ -1033,11 +1002,11 @@ async function emojiReactionGeneral(){
         }
     }
     return await fetch('https://b1messenger.esdlyon.dev/api/reaction/message/6/cryy', params)
-    .then(res => res.json())
-    .then(data => {
-        console.log(data)
-        return data
-    })
+        .then(res => res.json())
+        .then(data => {
+            console.log(data)
+            return data
+        })
 }
 async function updateMessage(messageId, newContent){
     let params ={
@@ -1051,11 +1020,11 @@ async function updateMessage(messageId, newContent){
         })
     }
     return await fetch (`https://b1messenger.esdlyon.dev/api/messages/${messageId}/edit`, params)
-    .then(res => res.json())
-    .then(data => {
-        console.log(data)
-        return data
-    })
+        .then(res => res.json())
+        .then(data => {
+            console.log(data)
+            return data
+        })
 }
 async function response(itemId, content){
     let params ={
@@ -1079,10 +1048,10 @@ async function response(itemId, content){
 
 async function privatePhoto(imageFile){
 
-        const formData = new FormData();
-        formData.append("image", imageFile);
+    const formData = new FormData();
+    formData.append("image", imageFile);
 
-        let params ={
+    let params ={
         method: "POST",
         headers: {
             "Authorization": "Bearer " + token
@@ -1090,11 +1059,11 @@ async function privatePhoto(imageFile){
         body: formData
     }
     return await fetch('https://b1messenger.esdlyon.dev/api/private/image', params)
-    .then(res => res.json())
-    .then(data => {
-        console.log(data)
-        return data
-    })
+        .then(res => res.json())
+        .then(data => {
+            console.log(data)
+            return data
+        })
 }
 async function sendMessageWithImage(imageId, content){
 
