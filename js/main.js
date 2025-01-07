@@ -247,7 +247,7 @@ console.log(recipientId);
 
 }
 
-const createReactionMenu=(message, messageId)=>{
+const createReactionMenu=(message, messageId, type)=>{
     const reactionContainer = document.createElement("div");
     reactionContainer.classList.add("reactionContainer");
     reactionContainer.style.marginLeft = "10px";
@@ -275,7 +275,7 @@ const createReactionMenu=(message, messageId)=>{
     reactionMenu.addEventListener("click", (e)=>{
         if(e.target.classList.contains("reactionOption")){
             const reactionType = e.target.getAttribute("data-reaction");
-            addReactionMessage(message.id, reactionType)
+            addReactionMessage(message.id, reactionType, type)
             reactionMenu.style.display = "none";
 
         }
@@ -332,47 +332,93 @@ const createReactionMenu=(message, messageId)=>{
 
     return reactionContainer;
 }
-const addReactionMessage = (messageId, reactionType) => {
-    emojiReaction(messageId, reactionType).then((res)=>{
-        const emoji = getEmojiForReaction(reactionType);
-        const messageElement = document.querySelector(`[data-message-id="${messageId}"]`);
-        if(!messageElement)return;
-        let reactionContainer = messageElement.querySelector('.reactionExisting');
+const addReactionMessage = (messageId, reactionType, type) => {
+    console.log('type is ', type)
+    if(type === 'private'){
+        emojiReaction(messageId, reactionType).then((res)=>{
+            const emoji = getEmojiForReaction(reactionType);
+            const messageElement = document.querySelector(`[data-message-id="${messageId}"]`);
+            if(!messageElement)return;
+            let reactionContainer = messageElement.querySelector('.reactionExisting');
 
-        if (!reactionContainer) {
-            reactionContainer = document.createElement("div");
-            reactionContainer.classList.add("reactionExisting");
-            messageElement.querySelector(".contentContainer").appendChild(reactionContainer);
-        }
+            if (!reactionContainer) {
+                reactionContainer = document.createElement("div");
+                reactionContainer.classList.add("reactionExisting");
+                messageElement.querySelector(".contentContainer").appendChild(reactionContainer);
+            }
 
-        // Recherche du span correspondant à la réaction
-        let reactionSpan = reactionContainer.querySelector(`[data-reaction="${reactionType}"]`);
+            // Recherche du span correspondant à la réaction
+            let reactionSpan = reactionContainer.querySelector(`[data-reaction="${reactionType}"]`);
 
-        if (res.status === "unreacted") {
-            // Si la réaction doit être supprimée
-            if (reactionSpan) {
-                const count = parseInt(reactionSpan.textContent.split(" ")[1]) || 0;
-                if (count > 1) {
-                    reactionSpan.textContent = `${emoji} ${count - 1}`;
+            if (res.status === "unreacted") {
+                // Si la réaction doit être supprimée
+                if (reactionSpan) {
+                    const count = parseInt(reactionSpan.textContent.split(" ")[1]) || 0;
+                    if (count > 1) {
+                        reactionSpan.textContent = `${emoji} ${count - 1}`;
+                    } else {
+                        reactionSpan.remove();
+                    }
+                }
+            } else if (res.status === "reacted") {
+                // Si la réaction doit être ajoutée
+                if (!reactionSpan) {
+                    reactionSpan = document.createElement("span");
+                    reactionSpan.classList.add("reactionCount");
+                    reactionSpan.setAttribute("data-reaction", reactionType);
+                    reactionSpan.textContent = `${emoji} 1`;
+                    reactionContainer.appendChild(reactionSpan);
                 } else {
-                    reactionSpan.remove();
+                    // Mise à jour du compteur
+                    const count = parseInt(reactionSpan.textContent.split(" ")[1]) || 0;
+                    reactionSpan.textContent = `${emoji} ${count + 1}`;
                 }
             }
-        } else if (res.status === "reacted") {
-            // Si la réaction doit être ajoutée
-            if (!reactionSpan) {
-                reactionSpan = document.createElement("span");
-                reactionSpan.classList.add("reactionCount");
-                reactionSpan.setAttribute("data-reaction", reactionType);
-                reactionSpan.textContent = `${emoji} 1`;
-                reactionContainer.appendChild(reactionSpan);
-            } else {
-                // Mise à jour du compteur
-                const count = parseInt(reactionSpan.textContent.split(" ")[1]) || 0;
-                reactionSpan.textContent = `${emoji} ${count + 1}`;
-            }
-            }
         })
+    }else if (type === 'group'){
+        emojiReactionGeneral(messageId, reactionType).then((res)=>{
+            const emoji = getEmojiForReaction(reactionType);
+            const messageElement = document.querySelector(`[data-message-id="${messageId}"]`);
+            if(!messageElement)return;
+            let reactionContainer = messageElement.querySelector('.reactionExisting');
+
+            if (!reactionContainer) {
+                reactionContainer = document.createElement("div");
+                reactionContainer.classList.add("reactionExisting");
+                messageElement.querySelector(".contentContainer").appendChild(reactionContainer);
+            }
+
+            // Recherche du span correspondant à la réaction
+            let reactionSpan = reactionContainer.querySelector(`[data-reaction="${reactionType}"]`);
+
+            if (res.status === "unreacted") {
+                // Si la réaction doit être supprimée
+                if (reactionSpan) {
+                    const count = parseInt(reactionSpan.textContent.split(" ")[1]) || 0;
+                    if (count > 1) {
+                        reactionSpan.textContent = `${emoji} ${count - 1}`;
+                    } else {
+                        reactionSpan.remove();
+                    }
+                }
+            } else if (res.status === "reacted") {
+                // Si la réaction doit être ajoutée
+                if (!reactionSpan) {
+                    reactionSpan = document.createElement("span");
+                    reactionSpan.classList.add("reactionCount");
+                    reactionSpan.setAttribute("data-reaction", reactionType);
+                    reactionSpan.textContent = `${emoji} 1`;
+                    reactionContainer.appendChild(reactionSpan);
+                } else {
+                    // Mise à jour du compteur
+                    const count = parseInt(reactionSpan.textContent.split(" ")[1]) || 0;
+                    reactionSpan.textContent = `${emoji} ${count + 1}`;
+                }
+            }
+
+        })
+    }
+
 }
 const getEmojiForReaction =(reactionType) => {
     const reactions={
@@ -494,7 +540,6 @@ const displayInputMessage = (messageId, reactionType) => {
                 console.log('new',res);
                 //pour récupérer les messages et les id
                 getMessages().then(res => {
-                    console.log('get',res);
                     // Le dernier message ajouté est généralement le plus récent
                     const newMessage = res[res.length - 1];
                     addMessageToChat({
@@ -520,10 +565,10 @@ const addMessageToChat = (message, type) => {
 
     authorAction(message, messagesDiv);
     addMessageId(message, messagesDiv);
-    if (type === 'private') {
-        const reactionMenu = createReactionMenu(message, message.id)
+
+        const reactionMenu = createReactionMenu(message, message.id, type)
         contentContainer.appendChild(reactionMenu);
-    }
+
 
 
     const responseButton = createResponseButton(message);
@@ -972,6 +1017,21 @@ async function emojiReaction(messageId, reactionType){
 
     }
     return await fetch(`https://b1messenger.esdlyon.dev/api/private/message/${messageId}/${reactionType}`, params)
+    .then(res => res.json())
+    .then(data => {
+        console.log(data)
+        return data
+    })
+}
+async function emojiReactionGeneral(){
+    let params ={
+        method: "GET",
+        headers: {
+            "Content-Type": "application/json",
+            "Authorization": "Bearer " + token
+        }
+    }
+    return await fetch('https://b1messenger.esdlyon.dev/api/reaction/message/6/cryy', params)
     .then(res => res.json())
     .then(data => {
         console.log(data)
