@@ -625,11 +625,10 @@ const createResponseContainer=(message)=>{
             responseContainer.appendChild(eachResponse);
         })
     }
+
     return responseContainer;
 }
-const createReactionResponse=()=>{
 
-}
 const createResponse=(message)=>{
 
     const eachResponse = document.createElement("div");
@@ -787,27 +786,20 @@ const addImageToChat=(imageUrl)=>{
     messageElement.appendChild(imageElement);
     allMessagesContainer.appendChild(messageElement);
 }
-document.querySelectorAll(".sendImageButton").forEach((el)=>{
-    el.addEventListener("click", () => {
 
-        const imageInput = document.querySelector(".imageUpload");
-        const imageFile = imageInput.files[0];  // Récupère le fichier image sélectionné par l'utilisateur
-
-
-        privatePhoto(imageFile).then((res)=>{
-            console.log(res)
-
-            sendMessageWithImage(imageId,'hicds').then((res)=> {
-                const imageUrl = res.imageUrl || res.imageUrl;
-                addImageToChat(imageUrl)
+        const fileInput = document.querySelector(".imageUpload");
+        fileInput.addEventListener("change", (e) => {
+            const file = e.target.files[0];
+            if(file){
+                console.log('good')
+                privatePhoto(file)
+            }
+        })
 
 
-            })
 
-        });
-    })
 
-});
+
 
 const refreshAutomatic =()=>{
     setInterval(()=>{
@@ -1058,10 +1050,12 @@ async function response(itemId, content){
 }
 
 
-async function privatePhoto(imageFile){
+async function privatePhoto(file){
 
     const formData = new FormData();
-    formData.append("image", imageFile);
+    formData.append("image", file);
+    formData.append("path", "https://b1messenger.esdlyon.dev/media/cache/resolve/privateMessagePic/images/profilepics/"); // Remplacer par un chemin valide
+
 
     let params ={
         method: "POST",
@@ -1070,7 +1064,7 @@ async function privatePhoto(imageFile){
         },
         body: formData
     }
-    return await fetch('https://b1messenger.esdlyon.dev/api/private/image', params)
+    return await fetch(`https://b1messenger.esdlyon.dev/api/private/image`, params)
         .then(res => res.json())
         .then(data => {
             console.log(data)
