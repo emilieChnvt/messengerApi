@@ -645,8 +645,7 @@ const createResponse=(message)=>{
     const eachResponse = document.createElement("div");
     eachResponse.classList.add("eachResponse");
 
-    const reactionMenu = createReactionResponse(message, message.id, type)
-    eachResponse.appendChild(reactionMenu);
+
 
     const responseAuthor = document.createElement("span");
     responseAuthor.classList.add("responseAuthor");
@@ -1001,7 +1000,7 @@ async function emojiReaction(messageId, reactionType){
             return data
         })
 }
-async function emojiReactionGeneral(){
+async function emojiReactionGeneral(messageId, reactionType){
     let params ={
         method: "GET",
         headers: {
@@ -1009,14 +1008,14 @@ async function emojiReactionGeneral(){
             "Authorization": "Bearer " + token
         }
     }
-    return await fetch('https://b1messenger.esdlyon.dev/api/reaction/message/6/cryy', params)
+    return await fetch(`https://b1messenger.esdlyon.dev/api/reaction/message/${messageId}/${reactionType}`, params)
         .then(res => res.json())
         .then(data => {
             console.log(data)
             return data
         })
 }
-async function emojiReactionResponse(){
+async function emojiReactionResponse(messageId, reactionType){
     let params ={
         method: "GET",
         headers: {
@@ -1024,7 +1023,7 @@ async function emojiReactionResponse(){
             "Authorization": "Bearer " + token
         }
     }
-    return await fetch('https://b1messenger.esdlyon.dev/api/reaction/message/6/cryy', params)
+    return await fetch(`https://b1messenger.esdlyon.dev/api/reaction/response/${messageId}/${reactionType}`, params)
         .then(res => res.json())
         .then(data => {
             console.log(data)
