@@ -246,6 +246,92 @@ console.log(recipientId);
         })
 
 }
+
+const createReactionMenu=(message, messageId)=>{
+    const reactionContainer = document.createElement("div");
+    reactionContainer.classList.add("reactionContainer");
+    reactionContainer.style.marginLeft = "10px";
+    reactionContainer.style.position="relative";
+
+    const reactionButton = document.createElement("span");
+    reactionButton.innerHTML= "+"
+    reactionButton.style.cursor = "pointer";
+
+    const reactionMenu = document.createElement("div");
+    reactionMenu.classList.add("reactionMenu");
+
+    const reactions = ["happy", "sadd", "cryy", "vomi"];
+
+    reactions.forEach(type => {
+        const reactionOption = document.createElement("span");
+        reactionOption.classList.add("reactionOption");
+        reactionOption.setAttribute("data-reaction", type)
+        reactionOption.textContent = getEmojiForReaction(type);
+        reactionMenu.appendChild(reactionOption);
+    })
+    reactionButton.addEventListener("click", ()=>{
+        reactionMenu.style.display = reactionMenu.style.display === "none" ? "block" : "none";
+    })
+    reactionMenu.addEventListener("click", (e)=>{
+        if(e.target.classList.contains("reactionOption")){
+            const reactionType = e.target.getAttribute("data-reaction");
+            addReactionMessage(message.id, reactionType)
+            reactionMenu.style.display = "none";
+
+        }
+    });
+    const reactionCount = {
+        happy: 0,
+        sadd: 0,
+        cryy: 0,
+        vomi: 0,
+    };
+
+    if(message.reactions && message.reactions.length >0){
+        message.reactions.forEach((reaction) => {
+            if (reactionCount[reaction.type] !== undefined) {
+                reactionCount[reaction.type]++;
+            }
+        });
+    }
+
+
+    const reactionExisting = document.createElement("div");
+    reactionExisting.classList.add("reactionExisting");
+
+
+    if(message.reactions && message.reactions.length >0){
+        message.reactions.forEach((reaction) => {
+            const emoji = getEmojiForReaction(reaction.type);
+            const reactionSpan = document.createElement("span");
+            reactionSpan.classList.add("reactionCount");
+            reactionSpan.setAttribute("data-reaction", reaction.type);
+
+            reactionSpan.textContent = `${emoji} ${reactionCount[reaction.type]}`; //emoji + nb
+            console.log("vhgvjh", message.reactions);
+
+
+            reactionSpan.addEventListener("click", () => {
+
+                console.log("Click détecté sur :", reactionSpan.textContent);
+                console.log("Message ID:", messageId);
+                console.log("Reaction Type:", reaction.type);
+
+                addReactionMessage(messageId, reaction.type);
+            });
+            reactionExisting.appendChild(reactionSpan);
+
+        })
+    }
+
+
+    reactionContainer.appendChild(reactionExisting);
+
+    reactionContainer.appendChild(reactionButton);
+    reactionContainer.appendChild(reactionMenu);
+
+    return reactionContainer;
+}
 const addReactionMessage = (messageId, reactionType) => {
     emojiReaction(messageId, reactionType).then((res)=>{
         const emoji = getEmojiForReaction(reactionType);
@@ -318,7 +404,6 @@ const removeArrowToGoBack = ()=> {
         arrow.remove()
     }
 }
-
 const goBack = () => {
     discussionsGroupePage.classList.add("visible");
     discussionsGroupePage.classList.remove("hidden");
@@ -330,8 +415,6 @@ const goBack = () => {
     chatPrive.classList.remove("visible");
     removeArrowToGoBack()
 }
-
-
 const goBackPrive = ()=>{
     discussionsPrivePage.classList.add("visible");
     discussionsPrivePage.classList.remove("hidden");
@@ -394,8 +477,6 @@ const displayMessages = () => {
     getMessages().then(res => {
         chat.classList.remove("hidden");
         chat.classList.add("visible");
-
-
         res.forEach(msg => {
             addMessageToChat(msg, 'group')
         })
@@ -410,9 +491,10 @@ const displayInputMessage = (messageId, reactionType) => {
         const message = inputMessage.value;
         if(message){
             newMessage(message).then((res)=> {
-                console.log(res);
+                console.log('new',res);
                 //pour récupérer les messages et les id
                 getMessages().then(res => {
+                    console.log('get',res);
                     // Le dernier message ajouté est généralement le plus récent
                     const newMessage = res[res.length - 1];
                     addMessageToChat({
@@ -420,7 +502,6 @@ const displayInputMessage = (messageId, reactionType) => {
                         author:{ username:'emiliech'},
                         id: newMessage.id,
                     }, 'group')
-                    emojiReaction(messageId, reactionType)
                 })
 
             })
@@ -431,7 +512,7 @@ const displayInputMessage = (messageId, reactionType) => {
     })
 }
 const addMessageToChat = (message, type) => {
-    console.log('its here', message)
+    console.log('le message est', message)
     let allMessagesContainer = (type === 'group') ? document.querySelector('.allMessages'): document.querySelector('.allMessagesPrives')
 
     const {aMessage, messagesDiv, contentContainer, messageContent} = createMessageContainer(message)
@@ -439,9 +520,9 @@ const addMessageToChat = (message, type) => {
 
     authorAction(message, messagesDiv);
     addMessageId(message, messagesDiv);
-
     if (type === 'private') {
-        addReactions(message, contentContainer);
+        const reactionMenu = createReactionMenu(message, message.id)
+        contentContainer.appendChild(reactionMenu);
     }
 
 
@@ -468,15 +549,7 @@ const addMessageId=(message, messagesDiv)=>{
         console.log("Private Message ID:", message.id);
     }
 }
-const addReactions=(message, contentContainer)=>{
-    const  reactions = reactionDiv(message)
-    contentContainer.appendChild(reactions);
 
-
-
-
-
-}
 const createMessageContainer=(message)=>{
     const aMessage = document.createElement("div");
     aMessage.classList.add("aMessage");
@@ -510,7 +583,6 @@ const addProfileImg=(message)=>{
     return photoProfil;
 }
 const authorAction = (message, messagesDiv, )=>{
-    console.log(currentUser)
     if (message.author.username === currentUser) {
         console.log(currentUser)
         messagesDiv.classList.add("marg");
@@ -675,94 +747,6 @@ const editMessage = (message, messageId, ) => {
     messagesDiv.appendChild(saveButton);
 
 }
-const reactionDiv = (message, messageId, type)=> {
-    console.log(message)
-    const reactionContainer = document.createElement("div");
-    reactionContainer.classList.add("reactionContainer");
-    reactionContainer.style.marginLeft = "10px";
-    reactionContainer.style.position="relative";
-
-    //btn pour afficher réactions
-    const reactionButton = document.createElement("span");
-    reactionButton.innerHTML= "+"
-    reactionButton.style.cursor = "pointer";
-
-    const reactionMenu = document.createElement("div");
-    reactionMenu.classList.add("reactionMenu");
-
-    const reactions = ["happy", "sadd", "cryy", "vomi"]
-   reactions.forEach(type => {
-       const reactionOption = document.createElement("span");
-       reactionOption.classList.add("reactionOption");
-       reactionOption.setAttribute("data-reaction", type)
-       reactionOption.textContent = getEmojiForReaction(type);
-       reactionMenu.appendChild(reactionOption);
-   })
-    reactionButton.addEventListener("click", ()=>{
-        reactionMenu.style.display = reactionMenu.style.display === "none" ? "block" : "none";
-    })
-    reactionMenu.addEventListener("click", (e)=>{
-        if(e.target.classList.contains("reactionOption")){
-            const reactionType = e.target.getAttribute("data-reaction");
-            addReactionMessage(message.id, reactionType)
-            reactionMenu.style.display = "none";
-
-        }
-    })
-
-
-    const reactionCount = {
-        happy: 0,
-        sadd: 0,
-        cryy: 0,
-        vomi: 0,
-    };
-
-    if(message.reactions && message.reactions.length >0){
-        message.reactions.forEach((reaction) => {
-            if (reactionCount[reaction.type] !== undefined) {
-                reactionCount[reaction.type]++;
-            }
-        });
-    }
-
-
-    const reactionExisting = document.createElement("div");
-    reactionExisting.classList.add("reactionExisting");
-
-
-    if(message.reactions && message.reactions.length >0){
-        message.reactions.forEach((reaction) => {
-        const emoji = getEmojiForReaction(reaction.type);
-        const reactionSpan = document.createElement("span");
-        reactionSpan.classList.add("reactionCount");
-        reactionSpan.setAttribute("data-reaction", reaction.type);
-
-        reactionSpan.textContent = `${emoji} ${reactionCount[reaction.type]}`; //emoji + nb
-        console.log("vhgvjh", message.reactions);
-
-
-        reactionSpan.addEventListener("click", () => {
-
-            console.log("Click détecté sur :", reactionSpan.textContent);
-            console.log("Message ID:", messageId);
-            console.log("Reaction Type:", type);
-
-            addReactionMessage(messageId, type);
-        });
-        reactionExisting.appendChild(reactionSpan);
-
-    })
-    }
-
-
-        reactionContainer.appendChild(reactionExisting);
-
-    reactionContainer.appendChild(reactionButton);
-    reactionContainer.appendChild(reactionMenu);
-
-    return reactionContainer;
-}
 const deleteElement=(messagesDiv, messageId)=>{
     const trash = document.createElement("span");
     trash.innerHTML = '🗑️'
@@ -909,7 +893,6 @@ async function newMessage(inputMessage){
     return await fetch('https://b1messenger.esdlyon.dev/api/messages/new', params)
         .then(res => res.json())
         .then(data => {
-console.log(data)
             return data
         })
 
