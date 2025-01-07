@@ -637,9 +637,16 @@ const createResponseContainer=(message)=>{
     }
     return responseContainer;
 }
+const createReactionResponse=()=>{
+
+}
 const createResponse=(message)=>{
+
     const eachResponse = document.createElement("div");
     eachResponse.classList.add("eachResponse");
+
+    const reactionMenu = createReactionResponse(message, message.id, type)
+    eachResponse.appendChild(reactionMenu);
 
     const responseAuthor = document.createElement("span");
     responseAuthor.classList.add("responseAuthor");
@@ -674,6 +681,7 @@ const toggleMessageToAddResponse = (message ) => {
         console.log("Contenu envoyé :", content);  // Vérifie la valeur de content
 
         response(message.id, content).then((res)=>{
+            console.log(res)
             displayResponse(message.id, res, content);
             responseInput.remove()
             sendResponse.remove();
@@ -994,6 +1002,21 @@ async function emojiReaction(messageId, reactionType){
         })
 }
 async function emojiReactionGeneral(){
+    let params ={
+        method: "GET",
+        headers: {
+            "Content-Type": "application/json",
+            "Authorization": "Bearer " + token
+        }
+    }
+    return await fetch('https://b1messenger.esdlyon.dev/api/reaction/message/6/cryy', params)
+        .then(res => res.json())
+        .then(data => {
+            console.log(data)
+            return data
+        })
+}
+async function emojiReactionResponse(){
     let params ={
         method: "GET",
         headers: {
