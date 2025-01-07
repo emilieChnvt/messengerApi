@@ -436,7 +436,7 @@ const addMessageToChat = (message, type) => {
     authorAction(message, messagesDiv);
     addMessageId(message, messagesDiv);
 
-    if(allMessagesContainer === document.querySelector('.allMessagesPrives')){
+    if (type === 'private') {
         addReactions(message, contentContainer);
     }
 
@@ -467,6 +467,10 @@ const addMessageId=(message, messagesDiv)=>{
 const addReactions=(message, contentContainer)=>{
     const  reactions = reactionDiv(message)
     contentContainer.appendChild(reactions);
+
+
+
+
 
 }
 const createMessageContainer=(message)=>{
