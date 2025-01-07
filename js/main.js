@@ -566,13 +566,14 @@ const addMessageToChat = (message, type) => {
     authorAction(message, messagesDiv);
     addMessageId(message, messagesDiv);
 
+    if(message.author.username !== currentUser){
         const reactionMenu = createReactionMenu(message, message.id, type)
         contentContainer.appendChild(reactionMenu);
 
+        const responseButton = createResponseButton(message);
+        messagesDiv.appendChild(responseButton)
+    }
 
-
-    const responseButton = createResponseButton(message);
-    messagesDiv.appendChild(responseButton)
 
     const responseContainer= createResponseContainer(message)
     messagesDiv.appendChild(responseContainer)
