@@ -787,14 +787,20 @@ const addImageToChat=(imageUrl)=>{
     allMessagesContainer.appendChild(messageElement);
 }
 
-        const fileInput = document.querySelector(".imageUpload");
-        fileInput.addEventListener("change", (e) => {
-            const file = e.target.files[0];
-            if(file){
-                console.log('good')
-                privatePhoto(file)
-            }
-        })
+const fileInput = document.querySelector(".imageUpload");
+fileInput.addEventListener("change", (e) => {
+    const file = e.target.files[0];
+    console.log(file)
+    if(file){
+        const res = privatePhoto(file)
+        if(res.imageId){
+            addImageToChat(res.imageUrl)
+            console.log('image with id', res.imageId)
+        }
+    }
+})
+
+
 
 
 
@@ -1054,8 +1060,6 @@ async function privatePhoto(file){
 
     const formData = new FormData();
     formData.append("image", file);
-    formData.append("path", "https://b1messenger.esdlyon.dev/media/cache/resolve/privateMessagePic/images/profilepics/"); // Remplacer par un chemin valide
-
 
     let params ={
         method: "POST",
@@ -1071,9 +1075,7 @@ async function privatePhoto(file){
             return data
         })
 }
-async function sendMessageWithImage(imageId, content){
-
-
+async function sendMessageWithImage(imageId, inputMessagePrive){
     let params ={
         method: "POST",
         headers: {
@@ -1081,7 +1083,7 @@ async function sendMessageWithImage(imageId, content){
             "Content-Type": "application/json",
         },
         body: JSON.stringify({
-            content: content,
+            content: inputMessagePrive,
             associatedImages:[imageId]
         })
     }
