@@ -52,6 +52,10 @@
     border-radius: 10px;
     box-shadow: 0px 2px 5px rgba(0, 0, 0, 0.1);
 }
+#file-upload-button{
+    background-color: #FFA72D;
+    margin-top: 10px;
+}
 .username, .password, .usernameAccount, .passwordAccount{
     border: 1px solid #FFA72D;
     padding: 10px;
@@ -194,6 +198,10 @@
 .btnGroupe:hover, .btnPrive:hover{
     background-color: #FFA72D;
     color: white;
+}
+.btnMessagePrive, .btnMessage{
+    border: none;
+    background-color: transparent;
 }
 
 

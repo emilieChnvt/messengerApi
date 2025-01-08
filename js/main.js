@@ -131,9 +131,12 @@ const displayChatConvPrive = ()=>{
     convsPrive().then((res)=>{
         conversations = res
         res.forEach((item)=>{
+            console.log(item)
             let conv = `<div class="grpPrive d-flex align-items-center justify-content-between borderOrange rounded-3 px-3 py-1" id="${item.id}">
                                     <div class=" d-flex align-items-center justify-content-center">
-                                        <div class="nameGroupe rounded-circle photoProfil border border-1 me-3"></div>
+                                        <div class="nameGroupe rounded-circle photoProfil border border-1 me-3">
+                                        <img src="${item.with.thumbImageUrl}">
+</div>
                                         <p class="pt-3 me-2">${item.with.username}</p>
                                         <p class="size pt-3">${item.lastMessage.content}</p>
                                     </div>
@@ -794,10 +797,6 @@ fileInput.addEventListener("change", (e) => {
         }
     }
 })
-
-
-
-
 
 
 
