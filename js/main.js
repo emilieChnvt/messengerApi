@@ -351,9 +351,9 @@ const handleReactionResponse=(res, reactionContainer, emoji, reactionType)=>{
     let reactionSpan = reactionContainer.querySelector(`[data-reaction="${reactionType}"]`);
 
     if (res.status === "unreacted") {
-        // Si la réaction doit être supprimée
+        //remove reaction
         if (reactionSpan) {
-            const count = parseInt(reactionSpan.textContent.split(" ")[1]) || 0;
+            const count = parseInt(reactionSpan.textContent.split(" ")[1]) || 0; //split smiley and 1 //parseInt => chaine de caractere en nb
             if (count > 1) {
                 reactionSpan.textContent = `${emoji} ${count - 1}`;
             } else {
@@ -361,7 +361,6 @@ const handleReactionResponse=(res, reactionContainer, emoji, reactionType)=>{
             }
         }
     } else if (res.status === "reacted") {
-        // Si la réaction doit être ajoutée
         if (!reactionSpan) {
             reactionSpan = document.createElement("span");
             reactionSpan.classList.add("reactionCount");
@@ -470,7 +469,7 @@ const displayConv=()=>{
 }
 const displayMessages = () => {
     const allMessages = document.querySelector(".allMessages");
-    allMessages.innerHTML = "";  // Réinitialise la liste des messages
+    allMessages.innerHTML = "";
 
 
     const chat = document.querySelector(".chat");
@@ -668,7 +667,6 @@ const toggleMessageToAddResponse = (message ) => {
 
     sendResponse.addEventListener("click", ()=>{
         const content = responseInput.value;
-        console.log("Contenu envoyé :", content);  // Vérifie la valeur de content
 
         response(message.id, content).then((res)=>{
             console.log(res)
