@@ -520,7 +520,7 @@ const addMessageToChat = (message, type) => {
     const {aMessage, messagesDiv, contentContainer, messageContent} = createMessageContainer(message)
     const photoProfil = addProfileImg(message, messagesDiv);
 
-    authorAction(message, messagesDiv);
+    authorAction(message, messagesDiv, type);
     addMessageId(message, messagesDiv);
 
     if(message.author.username !== currentUser){
@@ -589,13 +589,16 @@ const addProfileImg=(message)=>{
 }
 const authorAction = (message, messagesDiv, type )=>{
     if (message.author.username === currentUser) {
-        console.log(currentUser)
+        console.log(type)
         messagesDiv.classList.add("marg");
         messagesDiv.classList.add("messagesDivByMe");
         messagesDiv.style.justifyContent = "flex-end"
 
-        const trashElement = deleteElement(messagesDiv, message.id)
-        messagesDiv.appendChild(trashElement);
+        if(type==='group'){
+            const trashElement = deleteElement(messagesDiv, message.id)
+            messagesDiv.appendChild(trashElement);
+        }
+
     } else {
         const authorOfMessage = document.createElement("span");
         authorOfMessage.classList.add("authorOfMessage");
