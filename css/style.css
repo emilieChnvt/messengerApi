@@ -1,3 +1,10 @@
+body {
+    font-family: 'Poppins', Arial, sans-serif;
+}
+h1, h2, h3, h4, h5, h6, p, span, button, input, textarea {
+    font-family: 'Poppins', Arial, sans-serif;
+}
+
 .primaryColor{
     background-color: #FFA72D;
     color: white;

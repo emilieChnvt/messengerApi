@@ -17,7 +17,6 @@ let token = null;
 let freshener = null
 const toSignUp = document.querySelector(".toSignUp");
 const toSignIn = document.querySelector(".toSignIn");
-const loginPage = document.querySelector(".login");
 const createAccountPage = document.querySelector(".createAccount");
 
 const createAccount=()=>{
@@ -125,6 +124,8 @@ const chooseBtnConv = ()=> {
     })
 }
 
+
+//private conversation
 const displayChatConvPrive = ()=>{
     const allConv = document.querySelector(".allConvPrives");
     allConv.innerHTML = "";
@@ -209,8 +210,6 @@ const addMessagePrive = (itemId) => {
     btnMessagePrive.removeEventListener("click", handleSendMessage)
     btnMessagePrive.addEventListener("click", ()=>{handleSendMessage(itemId)})
 }
-
-
 const handleSendMessage = (itemId) => {
     const inputMessagePrive = document.querySelector(".inputMessagePrive");
     const currentConv = conversations.find(conv =>conv.id === +itemId); //+ pour convertir en nombre (c'était une string)
@@ -233,6 +232,8 @@ const handleSendMessage = (itemId) => {
 
 }
 
+
+//reactions
 const createReactionMenu=(message, messageId, type)=>{
     const reactionContainer = document.createElement("div");
     reactionContainer.classList.add("reactionContainer");
@@ -385,6 +386,7 @@ const getEmojiForReaction =(reactionType) => {
     return reactions[reactionType]
 }
 
+
 const displayChatConv=()=>{
 
     discussionsGroupePage.classList.add("visible");
@@ -458,6 +460,8 @@ const toogleBtnToShowConv = () => {
         displayConv()
     })
 }
+
+
 const displayConv=()=>{
     discussionsGroupePage.classList.add("hidden");
     discussionsGroupePage.classList.remove("visible");
@@ -484,7 +488,6 @@ const displayMessages = () => {
     })
     displayInputMessage()
 }
-
 const displayInputMessage = (file) => {
 
     const btnMessage = document.querySelector(".btnMessage");
@@ -551,6 +554,7 @@ const addMessageId=(message, messagesDiv)=>{
     }
 }
 
+//message div
 const createMessageContainer=(message)=>{
     const aMessage = document.createElement("div");
     aMessage.classList.add("aMessage");
@@ -605,6 +609,9 @@ const authorAction = (message, messagesDiv, type )=>{
         messagesDiv.prepend(pen);
     }
 }
+
+
+//response
 const createResponseButton=(message)=>{
     const responseButton = document.createElement("button");
     responseButton.innerHTML = `<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 512 512" style="width:15px; height:15px"><!--!Font Awesome Free 6.7.2 by @fontawesome - https://fontawesome.com License - https://fontawesome.com/license/free Copyright 2025 Fonticons, Inc.--><path d="M205 34.8c11.5 5.1 19 16.6 19 29.2l0 64 112 0c97.2 0 176 78.8 176 176c0 113.3-81.5 163.9-100.2 174.1c-2.5 1.4-5.3 1.9-8.1 1.9c-10.9 0-19.7-8.9-19.7-19.7c0-7.5 4.3-14.4 9.8-19.5c9.4-8.8 22.2-26.4 22.2-56.7c0-53-43-96-96-96l-96 0 0 64c0 12.6-7.4 24.1-19 29.2s-25 3-34.4-5.4l-160-144C3.9 225.7 0 217.1 0 208s3.9-17.7 10.6-23.8l160-144c9.4-8.5 22.9-10.6 34.4-5.4z"/></svg>`;
@@ -625,7 +632,6 @@ const createResponseContainer=(message)=>{
 
     return responseContainer;
 }
-
 const createResponse=(message)=>{
 
     const eachResponse = document.createElement("div");
@@ -644,8 +650,6 @@ const createResponse=(message)=>{
 
     return eachResponse;
 }
-
-
 const toggleMessageToAddResponse = (message ) => {
     const responseDiv = document.createElement("div");
     responseDiv.classList.add("responseDiv");
@@ -678,7 +682,6 @@ const toggleMessageToAddResponse = (message ) => {
     messageDiv.appendChild(responseDiv);
 
 }
-
 const displayResponse=( messageId, content )=>{// response(message.id, content)
     const messageDiv = document.querySelector(`.messagesDiv[data-message-id="${messageId}"]`);
 
@@ -711,6 +714,7 @@ const displayResponse=( messageId, content )=>{// response(message.id, content)
 }
 
 
+//edit
 const penToEdit=(message)=>{
     const pencil = document.createElement("span")
     pencil.innerHTML = `<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 512 512" style="width:20px; height:20px; padding:5px; background-color:#f0f0f0; border-radius:50%; cursor:pointer; position: absolute; left:-5px; bottom:50%"><!--!Font Awesome Free 6.7.2 by @fontawesome - https://fontawesome.com License - https://fontawesome.com/license/free Copyright 2024 Fonticons, Inc.--><path d="M410.3 231l11.3-11.3-33.9-33.9-62.1-62.1L291.7 89.8l-11.3 11.3-22.6 22.6L58.6 322.9c-10.4 10.4-18 23.3-22.2 37.4L1 480.7c-2.5 8.4-.2 17.5 6.1 23.7s15.3 8.5 23.7 6.1l120.3-35.4c14.1-4.2 27-11.8 37.4-22.2L387.7 253.7 410.3 231zM160 399.4l-9.1 22.7c-4 3.1-8.5 5.4-13.3 6.9L59.4 452l23-78.1c1.4-4.9 3.8-9.4 6.9-13.3l22.7-9.1 0 32c0 8.8 7.2 16 16 16l32 0zM362.7 18.7L348.3 33.2 325.7 55.8 314.3 67.1l33.9 33.9 62.1 62.1 33.9 33.9 11.3-11.3 22.6-22.6 14.5-14.5c25-25 25-65.5 0-90.5L453.3 18.7c-25-25-65.5-25-90.5 0zm-47.4 168l-144 144c-6.2 6.2-16.4 6.2-22.6 0s-6.2-16.4 0-22.6l144-144c6.2-6.2 16.4-6.2 22.6 0s6.2 16.4 0 22.6z"/></svg>`
@@ -751,6 +755,8 @@ const editMessage = (message, messageId, ) => {
     messagesDiv.appendChild(saveButton);
 
 }
+
+//delete
 const deleteElement=(messagesDiv, messageId)=>{
     const trash = document.createElement("span");
     trash.innerHTML = '🗑️'
@@ -766,6 +772,8 @@ const deleteElement=(messagesDiv, messageId)=>{
     })
     return trash
 }
+
+//add image
 const addImageToChat=(imageUrl)=>{
     const allMessagesContainer = document.querySelector(".allMessages");
     const messageElement=document.createElement("div");
@@ -800,7 +808,7 @@ fileInput.addEventListener("change", (e) => {
 
 
 
-
+//refresh
 const refreshAutomatic =()=>{
     setInterval(()=>{
         console.log("Refreshing automatic...");
